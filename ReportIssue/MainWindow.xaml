@@ -1,0 +1,79 @@
+﻿<Window x:Class="ReportIssue.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ReportIssue"
+        KeyDown="Window_KeyDown" Title="Report Issue" Height="900" Width="1300" ResizeMode="CanMinimize">
+    <FrameworkElement.DataContext>
+        <XmlDataProvider Source="IssueType.xml"/>
+    </FrameworkElement.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListView SelectionChanged="_issueList_SelectionChanged" ButtonBase.Click="_issueList_Click"
+              Name="_issueList" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5, 5, 5, 5"
+              VerticalAlignment="Stretch" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Send" Width="30">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Selected, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="UpdateTime" Width="140" DisplayMemberBinding="{Binding UpdateTime}"/>
+                    <GridViewColumn Header="Template" Width="140" DisplayMemberBinding="{Binding Template}"/>
+                    <GridViewColumn Header="Location" Width="140">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                  <Hyperlink ToolTip="Click to  browse to issue location in documentation" NavigateUri="{Binding Parameter9}">
+                    <Run Text="{Binding Parameter9}"/>
+                  </Hyperlink>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Product" Width="140" DisplayMemberBinding="{Binding Parameter2}"/>
+                    <GridViewColumn Header="IssueTxt" Width="140">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                  <Hyperlink ToolTip="Click to browse to issue bug location" NavigateUri="{Binding Parameter15}">
+                    <Run Text="{Binding Parameter4}"/>
+                  </Hyperlink>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Wrong" Width="140" DisplayMemberBinding="{Binding Parameter5}"/>
+                    <GridViewColumn Header="Right" Width="140" DisplayMemberBinding="{Binding Parameter6}"/>
+                    <GridViewColumn Header="Submitted" Width="140" DisplayMemberBinding="{Binding Submitted}"/>
+                    <GridViewColumn Header="Fixed" Width="140" DisplayMemberBinding="{Binding Fixed}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right"
+                Margin="15, 5, 15, 5">
+            <Button Click="newIssueButton_Click" Name="_newIssueBtn" Margin="5, 5, 5, 5" Height="25" Width="100">New Issue</Button>
+            <Button Click="editIssueButton_Click" Name="_editIssueBtn" Margin="5, 5, 5, 5" Height="25" Width="100">Edit Issue</Button>
+            <Button Click="removeIssueButton_Click" Name="_deleteIssueBtn" Margin="5, 5, 5, 5" Height="25" Width="100">Delete Issue</Button>
+            <Button Click="dupIssueButton_Click" Name="_dupIssueBtn" Margin="5, 5, 5, 5" Height="25" Width="100">Duplicate Issue</Button>
+            <Button Click="sendButton_Click" Margin="5, 5, 5, 5" Height="25" Width="100">Send Report</Button>
+            <Button Click="createBugButton_Click" Margin="5, 5, 75, 5" Height="25" Width="100">Create Bug</Button>
+            <Button Click="_selectAllIssueBtn_Click" Name="_selectAllIssueBtn" Margin="5, 5, 5, 5" Height="25"
+              Width="100">Select all Issues</Button>
+            <Button Click="_findIssueBtn_Click" Name="_findIssueBtn" Margin="5, 5, 5, 5" Height="25" Width="100">Find Issue</Button>
+            <Button Click="_filterIssueBtn_Click" Name="_filterIssueBtn" Margin="5, 5, 5, 5" Height="25" Width="100">Filter Issues</Button>
+            <Button Click="_resetFilterIssueBtn_Click" Name="_resetFilterIssueBtn" Margin="5, 5, 5, 5" Height="25"
+              Width="150">Reset Filter Issues</Button>
+        </StackPanel>
+    </Grid>
+</Window>
