@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RIDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="RIDataModelStoreContainer">
+    <EntitySet Name="Filters" EntityType="RIDataModel.Store.Filters" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Issues" EntityType="RIDataModel.Store.Issues" store:Type="Tables" Schema="dbo" />
+  </EntityContainer>
+  <EntityType Name="Filters">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" StoreGeneratedPattern="Identity" Nullable="false" MaxLength="256" />
+    <Property Name="Issue" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Product" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Wrong" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Right" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Submitted" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Fixed" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Issues">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nchar" Nullable="false" MaxLength="256" />
+    <Property Name="Template" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UpdateTime" Type="datetime" Nullable="false" />
+    <Property Name="Parameter1" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter2" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter3" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter4" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter5" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter6" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="RIDataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="RIDataModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Filters" EntityType="RIDataModel.Filter" />
+          <EntitySet Name="Issues" EntityType="RIDataModel.Issue" />
+        </EntityContainer>
+        <EntityType Name="Filter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="Identity" MaxLength="256" />
+          <Property Name="Issue" Type="String" Nullable="false" />
+          <Property Name="Product" Type="String" Nullable="false" />
+          <Property Name="Wrong" Type="String" Nullable="false" />
+          <Property Name="Right" Type="String" Nullable="false" />
+          <Property Name="Submitted" Type="String" Nullable="false" />
+          <Property Name="Fixed" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Issue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" FixedLength="true" MaxLength="256" />
+          <Property Name="Template" Type="String" Nullable="false" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <Property Name="Parameter1" Type="String" Nullable="false" />
+          <Property Name="Parameter2" Type="String" Nullable="false" />
+          <Property Name="Parameter3" Type="String" Nullable="false" />
+          <Property Name="Parameter4" Type="String" Nullable="false" />
+          <Property Name="Parameter5" Type="String" Nullable="false" />
+          <Property Name="Parameter6" Type="String" Nullable="false" />
+          <Property Name="Parameter7" Type="String" Nullable="false" />
+          <Property Name="Parameter8" Type="String" Nullable="false" />
+          <Property Name="Parameter10" Type="String" Nullable="false" />
+          <Property Name="Parameter9" Type="String" Nullable="false" />
+          <Property Name="Parameter11" Type="String" Nullable="false" />
+          <Property Name="Parameter12" Type="String" Nullable="false" />
+          <Property Name="Parameter13" Type="String" Nullable="false" />
+          <Property Name="Parameter14" Type="String" Nullable="false" />
+          <Property Name="Parameter15" Type="String" Nullable="false" />
+          <Property Name="Parameter16" Type="String" Nullable="false" />
+          <Property Name="Parameter17" Type="String" Nullable="false" />
+          <Property Name="Parameter18" Type="String" Nullable="false" />
+          <Property Name="Parameter19" Type="String" Nullable="false" />
+          <Property Name="Parameter20" Type="String" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="RIDataModelStoreContainer" CdmEntityContainer="RIDataModelContainer">
+    <EntitySetMapping Name="Filters">
+      <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.Filter)">
+        <MappingFragment StoreEntitySet="Filters">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Issue" ColumnName="Issue" />
+          <ScalarProperty Name="Product" ColumnName="Product" />
+          <ScalarProperty Name="Wrong" ColumnName="Wrong" />
+          <ScalarProperty Name="Right" ColumnName="Right" />
+          <ScalarProperty Name="Submitted" ColumnName="Submitted" />
+          <ScalarProperty Name="Fixed" ColumnName="Fixed" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Issues">
+      <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.Issue)">
+        <MappingFragment StoreEntitySet="Issues">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Template" ColumnName="Template" />
+          <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+          <ScalarProperty Name="Parameter1" ColumnName="Parameter1" />
+          <ScalarProperty Name="Parameter2" ColumnName="Parameter2" />
+          <ScalarProperty Name="Parameter3" ColumnName="Parameter3" />
+          <ScalarProperty Name="Parameter4" ColumnName="Parameter4" />
+          <ScalarProperty Name="Parameter5" ColumnName="Parameter5" />
+          <ScalarProperty Name="Parameter6" ColumnName="Parameter6" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
