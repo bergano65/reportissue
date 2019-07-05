@@ -659,7 +659,7 @@ namespace ReportIssue
             else if (this._sortColName == "UpdateTime")
             {
                 this._tc.TrackEvent("Sort by UpdateTime", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                this._issues = !this._sortAccending ? new ObservableCollection<Issue>(this._issues.OrderByDescending<Issue, DateTime>((Func<Issue, DateTime>)(e => (DateTime)e.UpdateTime)).ToList<Issue>()) : new ObservableCollection<Issue>(this._issues.OrderBy<Issue, DateTime>((Func<Issue, DateTime>)(e => (D)e.UpdateTime)).ToList<Issue>());
+                this._issues = !this._sortAccending ? new ObservableCollection<Issue>(this._issues.OrderByDescending<Issue, DateTime>((Func<Issue, DateTime>)(e => (DateTime)e.UpdateTime)).ToList<Issue>()) : new ObservableCollection<Issue>(this._issues.OrderBy<Issue, DateTime>((Func<Issue, DateTime>)(e => (DateTime)e.UpdateTime)).ToList<Issue>());
             }
             else if (this._sortColName == "Wrong")
             {

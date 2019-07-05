@@ -26,7 +26,46 @@ namespace ReportIssue
 
         public Issue()
         {
+            this.ID = Guid.NewGuid().ToString();
             this.Markers = new List<Rectangle>();
+
+            this.BugPath = "";
+            this.English = "";
+            this.Fixed = true;
+            this.Url = "";
+            this.Selected = true;
+            this.IssueTxt = "";
+            this.MarkersString ="";
+            this.PictureBytes = new byte[5];
+            this.Product = "";
+            this.Reason = "";
+            this.Right = "";
+            this.Submitted = true;
+            this.Template = "";
+            this.Url = "";
+            this.Wrong = "";
+            this.WhereFound = "";
+            this.Parameter1 = "";
+            this.Parameter2 = "";
+            this.Parameter3 = "";
+            this.Parameter4 = "";
+            this.Parameter5 = "";
+            this.Parameter6 = "";
+            this.Parameter7 = "";
+            this.Parameter8 = "";
+            this.Parameter9 = "";
+            this.Parameter10 = "";
+            this.Parameter11 = "";
+            this.Parameter12 = "";
+            this.Parameter13 = "";
+            this.Parameter14 = "";
+            this.Parameter15 = "";
+            this.Parameter16 = "";
+            this.Parameter17 = "";
+            this.Parameter18 = "";
+            this.Parameter19 = "";
+            this.Parameter20 = "";
+            this.UpdateTime = DateTime.Now;
         }
 
         public void Open()
