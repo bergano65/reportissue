@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="90b0261c191446e499e8f56bdc5a0d88" Name="Diagram1" >
-        <EntityTypeShape EntityType="RIDataModel.Filter" Width="1.5" PointX="4.75" PointY="1" />
+        <EntityTypeShape EntityType="RIDataModel.Filter" Width="1.5" PointX="4.75" PointY="1.125" />
         <EntityTypeShape EntityType="RIDataModel.Issue" Width="1.5" PointX="1.75" PointY="2.625" />
       </Diagram>
     </edmx:Diagrams>

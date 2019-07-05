@@ -14,7 +14,7 @@ namespace ReportIssue
     
     public partial class Filter
     {
-        public string Id { get; set; }
+        public string ID { get; set; }
         public string Issue { get; set; }
         public string Product { get; set; }
         public string Wrong { get; set; }

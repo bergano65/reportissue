@@ -11,9 +11,9 @@
   </EntityContainer>
   <EntityType Name="Filters">
     <Key>
-      <PropertyRef Name="Id" />
+      <PropertyRef Name="ID" />
     </Key>
-    <Property Name="Id" Type="nvarchar" StoreGeneratedPattern="Identity" Nullable="false" MaxLength="256" />
+    <Property Name="ID" Type="nvarchar" StoreGeneratedPattern="None" Nullable="false" MaxLength="256" />
     <Property Name="Issue" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Product" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Wrong" Type="nvarchar(max)" Nullable="false" />
@@ -23,17 +23,43 @@
   </EntityType>
   <EntityType Name="Issues">
     <Key>
-      <PropertyRef Name="Id" />
+      <PropertyRef Name="ID" />
     </Key>
-    <Property Name="Id" Type="nchar" Nullable="false" MaxLength="256" />
-    <Property Name="Template" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="UpdateTime" Type="datetime" Nullable="false" />
-    <Property Name="Parameter1" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Parameter2" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Parameter3" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Parameter4" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Parameter5" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Parameter6" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ID" Type="nchar" Nullable="false" MaxLength="256" />
+    <Property Name="Template" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="UpdateTime" Type="datetime" Nullable="true" />
+    <Property Name="Parameter1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter4" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter5" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter6" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter7" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter8" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter10" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter9" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter11" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter12" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter13" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter14" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter15" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter16" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter17" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter18" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter19" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter20" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Url" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="BugPath" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="MarkersString" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Fixed" Type="bit" Nullable="true" />
+    <Property Name="Submitted" Type="bit" Nullable="true" />
+    <Property Name="Product" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Reason" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Wrong" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="WhereFound" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Right" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="English" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="IssueTxt" Type="nvarchar(max)" Nullable="true" />
   </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -45,9 +71,9 @@
         </EntityContainer>
         <EntityType Name="Filter">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="Identity" MaxLength="256" />
+          <Property Name="ID" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" MaxLength="256" />
           <Property Name="Issue" Type="String" Nullable="false" />
           <Property Name="Product" Type="String" Nullable="false" />
           <Property Name="Wrong" Type="String" Nullable="false" />
@@ -57,18 +83,18 @@
         </EntityType>
         <EntityType Name="Issue">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" FixedLength="true" MaxLength="256" />
-          <Property Name="Template" Type="String" Nullable="false" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" />
+          <Property Name="ID" Type="String" annotation:StoreGeneratedPattern="None" FixedLength="true" MaxLength="256" Nullable="false" />
+          <Property Name="Template" Type="String" Nullable="true" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="true" />
           <Property Name="Parameter1" Type="String" Nullable="false" />
           <Property Name="Parameter2" Type="String" Nullable="false" />
-          <Property Name="Parameter3" Type="String" Nullable="false" />
-          <Property Name="Parameter4" Type="String" Nullable="false" />
-          <Property Name="Parameter5" Type="String" Nullable="false" />
-          <Property Name="Parameter6" Type="String" Nullable="false" />
-          <Property Name="Parameter7" Type="String" Nullable="false" />
+          <Property Name="Parameter3" Type="String" Nullable="true" />
+          <Property Name="Parameter4" Type="String" Nullable="true" />
+          <Property Name="Parameter5" Type="String" Nullable="true" />
+          <Property Name="Parameter6" Type="String" Nullable="true" />
+          <Property Name="Parameter7" Type="String" Nullable="true" />
           <Property Name="Parameter8" Type="String" Nullable="false" />
           <Property Name="Parameter10" Type="String" Nullable="false" />
           <Property Name="Parameter9" Type="String" Nullable="false" />
@@ -82,6 +108,18 @@
           <Property Name="Parameter18" Type="String" Nullable="false" />
           <Property Name="Parameter19" Type="String" Nullable="false" />
           <Property Name="Parameter20" Type="String" Nullable="false" />
+          <Property Name="Url" Type="String" Nullable="false" />
+          <Property Name="BugPath" Type="String" Nullable="false" />
+          <Property Name="MarkersString" Type="String" Nullable="false" />
+          <Property Name="Fixed" Type="Boolean" Nullable="false" />
+          <Property Name="Submitted" Type="Boolean" Nullable="false" />
+          <Property Name="Product" Type="String" Nullable="false" />
+          <Property Name="Reason" Type="String" Nullable="false" />
+          <Property Name="Wrong" Type="String" Nullable="false" />
+          <Property Name="WhereFound" Type="String" Nullable="false" />
+          <Property Name="Right" Type="String" Nullable="false" />
+          <Property Name="English" Type="String" Nullable="false" />
+          <Property Name="IssueTxt" Type="String" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -92,7 +130,7 @@
     <EntitySetMapping Name="Filters">
       <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.Filter)">
         <MappingFragment StoreEntitySet="Filters">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Issue" ColumnName="Issue" />
           <ScalarProperty Name="Product" ColumnName="Product" />
           <ScalarProperty Name="Wrong" ColumnName="Wrong" />
@@ -105,7 +143,7 @@
     <EntitySetMapping Name="Issues">
       <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.Issue)">
         <MappingFragment StoreEntitySet="Issues">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Template" ColumnName="Template" />
           <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
           <ScalarProperty Name="Parameter1" ColumnName="Parameter1" />
@@ -114,6 +152,32 @@
           <ScalarProperty Name="Parameter4" ColumnName="Parameter4" />
           <ScalarProperty Name="Parameter5" ColumnName="Parameter5" />
           <ScalarProperty Name="Parameter6" ColumnName="Parameter6" />
+          <ScalarProperty Name="Parameter7" ColumnName="Parameter7" />
+          <ScalarProperty Name="Parameter8" ColumnName="Parameter8" />
+          <ScalarProperty Name="Parameter10" ColumnName="Parameter10" />
+          <ScalarProperty Name="Parameter9" ColumnName="Parameter9" />
+          <ScalarProperty Name="Parameter11" ColumnName="Parameter11" />
+          <ScalarProperty Name="Parameter12" ColumnName="Parameter12" />
+          <ScalarProperty Name="Parameter13" ColumnName="Parameter13" />
+          <ScalarProperty Name="Parameter14" ColumnName="Parameter14" />
+          <ScalarProperty Name="Parameter15" ColumnName="Parameter15" />
+          <ScalarProperty Name="Parameter16" ColumnName="Parameter16" />
+          <ScalarProperty Name="Parameter17" ColumnName="Parameter17" />
+          <ScalarProperty Name="Parameter18" ColumnName="Parameter18" />
+          <ScalarProperty Name="Parameter19" ColumnName="Parameter19" />
+          <ScalarProperty Name="Parameter20" ColumnName="Parameter20" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="BugPath" ColumnName="BugPath" />
+          <ScalarProperty Name="MarkersString" ColumnName="MarkersString" />
+          <ScalarProperty Name="Fixed" ColumnName="Fixed" />
+          <ScalarProperty Name="Submitted" ColumnName="Submitted" />
+          <ScalarProperty Name="Product" ColumnName="Product" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="Wrong" ColumnName="Wrong" />
+          <ScalarProperty Name="WhereFound" ColumnName="WhereFound" />
+          <ScalarProperty Name="Right" ColumnName="Right" />
+          <ScalarProperty Name="English" ColumnName="English" />
+          <ScalarProperty Name="IssueTxt" ColumnName="IssueTxt" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

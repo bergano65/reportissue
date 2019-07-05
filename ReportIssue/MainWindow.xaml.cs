@@ -51,7 +51,7 @@ namespace ReportIssue
         private Filter _findFilter;
         private Filter _filter;
         private XmlDocument _cfgDoc;
-
+       
         private Issue _currentIssue { get; set; }
 
         private int _issueNum { get; set; }
@@ -63,7 +63,7 @@ namespace ReportIssue
 
         public MainWindow()
         {
-            this._tc = new TelemetryClient();
+             this._tc = new TelemetryClient();
             this._tc.Context.User.AuthenticatedUserId = "eviten@microsoft.com";
             this._tc.Context.Session.Id = Guid.NewGuid().ToString();
             IOperationHolder<RequestTelemetry> operation = this._tc.StartOperation<RequestTelemetry>("Start");
@@ -336,7 +336,7 @@ namespace ReportIssue
                     else
                         parameters[index] = fieldValue;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                 }
             }
@@ -362,7 +362,7 @@ namespace ReportIssue
                 this.DeletePictures(pictures);
                 return tfsWorkItem;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 this._tc.TrackEvent(string.Format("Unable to find bug report description for template '{0}'", (object)issue.Template), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 int num = (int)MessageBox.Show(string.Format("Unable to find bug report description for template '{0}'", (object)issue.Template), "Issue report");
@@ -388,7 +388,7 @@ namespace ReportIssue
                 {
                     Uri uri = new Uri(issue.Parameter15);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     flag = false;
                 }
@@ -408,7 +408,7 @@ namespace ReportIssue
                         this._data.SaveChanges();
                         int num = (int)MessageBox.Show("Bug created", "Issue report");
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         this._tc.TrackEvent("Save database failed", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                         int num = (int)MessageBox.Show("Can't save database", "Issue report");
@@ -468,7 +468,7 @@ namespace ReportIssue
                     else
                         this._tc.TrackEvent("Report mail choose canceled", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     this._tc.TrackException(ex, (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                     int num = (int)MessageBox.Show("Failed to run Outlook. Is it already running? Close it in this case");
@@ -501,7 +501,7 @@ namespace ReportIssue
                     issue.Open();
                 BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(issue.Picture.GetHbitmap(), (IntPtr)0, new Int32Rect(0, 0, issue.Picture.Width, issue.Picture.Height), BitmapSizeOptions.FromWidthAndHeight(issue.Picture.Width, issue.Picture.Height));
                 drawingContext.DrawImage((ImageSource)sourceFromHbitmap, new Rect(0.0, 0.0, (double)issue.Picture.Width, (double)issue.Picture.Height));
-                foreach (Rectangle marker in issue.Markers)
+                foreach (System.Drawing.Rectangle marker in issue.Markers)
                     drawingContext.DrawRectangle((System.Windows.Media.Brush)null, new System.Windows.Media.Pen((System.Windows.Media.Brush)System.Windows.Media.Brushes.Red, 2.0), new Rect((double)marker.X, (double)marker.Y, (double)marker.Width, (double)marker.Height));
                 drawingContext.Close();
                 RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(issue.Picture.Width, issue.Picture.Height, 96.0, 96.0, PixelFormats.Pbgra32);
@@ -659,7 +659,7 @@ namespace ReportIssue
             else if (this._sortColName == "UpdateTime")
             {
                 this._tc.TrackEvent("Sort by UpdateTime", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                this._issues = !this._sortAccending ? new ObservableCollection<Issue>(this._issues.OrderByDescending<Issue, DateTime>((Func<Issue, DateTime>)(e => e.UpdateTime)).ToList<Issue>()) : new ObservableCollection<Issue>(this._issues.OrderBy<Issue, DateTime>((Func<Issue, DateTime>)(e => e.UpdateTime)).ToList<Issue>());
+                this._issues = !this._sortAccending ? new ObservableCollection<Issue>(this._issues.OrderByDescending<Issue, DateTime>((Func<Issue, DateTime>)(e => (DateTime)e.UpdateTime)).ToList<Issue>()) : new ObservableCollection<Issue>(this._issues.OrderBy<Issue, DateTime>((Func<Issue, DateTime>)(e => (D)e.UpdateTime)).ToList<Issue>());
             }
             else if (this._sortColName == "Wrong")
             {
@@ -825,7 +825,7 @@ namespace ReportIssue
             {
                 Uri uri = new Uri(dataContext.Parameter15);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 int num = (int)MessageBox.Show("No issue  related bug created", "Issue report");
                 return;

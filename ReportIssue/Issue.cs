@@ -14,9 +14,9 @@ namespace ReportIssue
     
     public partial class Issue
     {
-        public string Id { get; set; }
+        public string ID { get; set; }
         public string Template { get; set; }
-        public System.DateTime UpdateTime { get; set; }
+        public Nullable<System.DateTime> UpdateTime { get; set; }
         public string Parameter1 { get; set; }
         public string Parameter2 { get; set; }
         public string Parameter3 { get; set; }
@@ -37,5 +37,17 @@ namespace ReportIssue
         public string Parameter18 { get; set; }
         public string Parameter19 { get; set; }
         public string Parameter20 { get; set; }
+        public string Url { get; set; }
+        public string BugPath { get; set; }
+        public string MarkersString { get; set; }
+        public bool Fixed { get; set; }
+        public bool Submitted { get; set; }
+        public string Product { get; set; }
+        public string Reason { get; set; }
+        public string Wrong { get; set; }
+        public string WhereFound { get; set; }
+        public string Right { get; set; }
+        public string English { get; set; }
+        public string IssueTxt { get; set; }
     }
 }

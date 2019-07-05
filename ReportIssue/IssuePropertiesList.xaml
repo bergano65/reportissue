@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="ReportIssue.IssuePropertiesList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ReportIssue">
+    <Grid>
+        <ListView x:Name="_propertyList">
+            <FrameworkElement.Resources>
+                <Style x:Key="_multiText" TargetType="{x:Type TextBox}">
+                    <Style.Setters>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding XPath=@type}" Value="mtext">
+                            <Setter Property="UIElement.Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+                <Style x:Key="_text" TargetType="{x:Type TextBox}">
+                    <Style.Setters>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding XPath=@type}" Value="text">
+                            <Setter Property="UIElement.Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+                <Style x:Key="_combo" TargetType="{x:Type ComboBox}">
+                    <Style.Setters>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding XPath=@type, Mode=TwoWay}" Value="combo">
+                            <Setter Property="UIElement.Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+                <local:StringToIntConverter x:Key="_cnv"/>
+            </FrameworkElement.Resources>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="5,5,5,5" Height="80" MinWidth="350">
+                        <TextBlock VerticalAlignment="Center" Height="30" Margin="5,5,5,5" Width="120" HorizontalAlignment="Left"
+                       Text="{Binding XPath=@alias}"/>
+                        <TextBox Height="25" Margin="5,5,5,5" Style="{StaticResource _text}" Width="200" HorizontalAlignment="Left"
+                     Text="{Binding XPath=value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox AcceptsReturn="true" Height="50" Style="{StaticResource _multiText}" Margin="5,5,5,5"
+                     VerticalScrollBarVisibility="Visible" Width="200" HorizontalAlignment="Left"
+                     Text="{Binding XPath=value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ComboBox Height="25" MinWidth="200" Margin="5,5,5,5" Style="{StaticResource _combo}" Width="200"
+                      ItemsSource="{Binding XPath=value}"
+                      SelectedIndex="{Binding XPath=selected, Converter={StaticResource _cnv}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding XPath=@alias}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>
+    
