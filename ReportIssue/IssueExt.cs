@@ -17,8 +17,6 @@ namespace ReportIssue
         [NotMapped]
         public Bitmap Picture { get; set; }
 
-        public byte[] PictureBytes { get; set; }
-
         public bool Selected { get; set; }
 
         [NotMapped]

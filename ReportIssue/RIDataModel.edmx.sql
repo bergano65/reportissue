@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 07/04/2019 05:20:24
+-- Date Created: 07/06/2019 03:49:39
 -- Generated from EDMX file: C:\projects\ReportIssue\ReportIssue\RIDataModel.edmx
 -- --------------------------------------------------
 
@@ -48,15 +48,15 @@ GO
 -- Creating table 'Issues'
 CREATE TABLE [dbo].[Issues] (
     [ID] nchar(256)  NOT NULL,
-    [Template] nvarchar(max)  NOT NULL,
-    [UpdateTime] datetime  NOT NULL,
+    [Template] nvarchar(max)  NULL,
+    [UpdateTime] datetime  NULL,
     [Parameter1] nvarchar(max)  NOT NULL,
     [Parameter2] nvarchar(max)  NOT NULL,
-    [Parameter3] nvarchar(max)  NOT NULL,
-    [Parameter4] nvarchar(max)  NOT NULL,
-    [Parameter5] nvarchar(max)  NOT NULL,
-    [Parameter6] nvarchar(max)  NOT NULL,
-    [Parameter7] nvarchar(max)  NOT NULL,
+    [Parameter3] nvarchar(max)  NULL,
+    [Parameter4] nvarchar(max)  NULL,
+    [Parameter5] nvarchar(max)  NULL,
+    [Parameter6] nvarchar(max)  NULL,
+    [Parameter7] nvarchar(max)  NULL,
     [Parameter8] nvarchar(max)  NOT NULL,
     [Parameter10] nvarchar(max)  NOT NULL,
     [Parameter9] nvarchar(max)  NOT NULL,
@@ -81,7 +81,8 @@ CREATE TABLE [dbo].[Issues] (
     [WhereFound] nvarchar(max)  NOT NULL,
     [Right] nvarchar(max)  NOT NULL,
     [English] nvarchar(max)  NOT NULL,
-    [IssueTxt] nvarchar(max)  NOT NULL
+    [IssueTxt] nvarchar(max)  NOT NULL,
+    [PictureBytes] varbinary(max)  NOT NULL
 );
 GO
 

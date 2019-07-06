@@ -49,5 +49,6 @@ namespace ReportIssue
         public string Right { get; set; }
         public string English { get; set; }
         public string IssueTxt { get; set; }
+        public byte[] PictureBytes { get; set; }
     }
 }

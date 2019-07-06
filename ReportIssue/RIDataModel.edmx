@@ -13,7 +13,7 @@
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Name="ID" Type="nvarchar" StoreGeneratedPattern="None" Nullable="false" MaxLength="256" />
+    <Property Name="ID" Type="nvarchar" Nullable="false" MaxLength="256" />
     <Property Name="Issue" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Product" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Wrong" Type="nvarchar(max)" Nullable="false" />
@@ -28,38 +28,39 @@
     <Property Name="ID" Type="nchar" Nullable="false" MaxLength="256" />
     <Property Name="Template" Type="nvarchar(max)" Nullable="true" />
     <Property Name="UpdateTime" Type="datetime" Nullable="true" />
-    <Property Name="Parameter1" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter1" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter2" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Parameter3" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Parameter4" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Parameter5" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Parameter6" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Parameter7" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter8" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter10" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter9" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter11" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter12" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter13" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter14" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter15" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter16" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter17" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter18" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter19" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Parameter20" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Url" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="BugPath" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="MarkersString" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Fixed" Type="bit" Nullable="true" />
-    <Property Name="Submitted" Type="bit" Nullable="true" />
-    <Property Name="Product" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Reason" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Wrong" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="WhereFound" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Right" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="English" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="IssueTxt" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Parameter8" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter10" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter9" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter11" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter12" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter13" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter14" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter15" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter16" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter17" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter18" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter19" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Parameter20" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Url" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BugPath" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="MarkersString" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Fixed" Type="bit" Nullable="false" />
+    <Property Name="Submitted" Type="bit" Nullable="false" />
+    <Property Name="Product" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Reason" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Wrong" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="WhereFound" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Right" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="English" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IssueTxt" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PictureBytes" Type="varbinary(max)" Nullable="false" />
   </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -120,6 +121,7 @@
           <Property Name="Right" Type="String" Nullable="false" />
           <Property Name="English" Type="String" Nullable="false" />
           <Property Name="IssueTxt" Type="String" Nullable="false" />
+          <Property Name="PictureBytes" Type="Binary" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -178,6 +180,7 @@
           <ScalarProperty Name="Right" ColumnName="Right" />
           <ScalarProperty Name="English" ColumnName="English" />
           <ScalarProperty Name="IssueTxt" ColumnName="IssueTxt" />
+          <ScalarProperty Name="PictureBytes" ColumnName="PictureBytes" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
