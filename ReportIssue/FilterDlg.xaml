@@ -1,4 +1,4 @@
-﻿<    x:Class="ReportIssue.FilterDlg"
+﻿<Window x:Class="ReportIssue.FilterDlg"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -54,5 +54,5 @@
               Width="45">Cancel</Button>
         </StackPanel>
     </Grid>
-</>
+</Window>
     

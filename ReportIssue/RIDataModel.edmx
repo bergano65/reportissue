@@ -8,6 +8,7 @@
   <EntityContainer Name="RIDataModelStoreContainer">
     <EntitySet Name="Filters" EntityType="RIDataModel.Store.Filters" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Issues" EntityType="RIDataModel.Store.Issues" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Pictures" EntityType="RIDataModel.Store.Pictures" store:Type="Tables" Schema="dbo" />
   </EntityContainer>
   <EntityType Name="Filters">
     <Key>
@@ -62,6 +63,14 @@
     <Property Name="IssueTxt" Type="nvarchar(max)" Nullable="false" />
     <Property Name="PictureBytes" Type="varbinary(max)" Nullable="false" />
   </EntityType>
+  <EntityType Name="Pictures">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Bytes" Type="varbinary(max)" Nullable="false" />
+    <Property Name="MarkerString" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -69,6 +78,7 @@
         <EntityContainer Name="RIDataModelContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Filters" EntityType="RIDataModel.Filter" />
           <EntitySet Name="Issues" EntityType="RIDataModel.Issue" />
+          <EntitySet Name="Pictures" EntityType="RIDataModel.Picture" />
         </EntityContainer>
         <EntityType Name="Filter">
           <Key>
@@ -122,6 +132,14 @@
           <Property Name="English" Type="String" Nullable="false" />
           <Property Name="IssueTxt" Type="String" Nullable="false" />
           <Property Name="PictureBytes" Type="Binary" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Picture">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Bytes" Type="Binary" Nullable="false" />
+          <Property Name="MarkerString" Type="String" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -181,6 +199,15 @@
           <ScalarProperty Name="English" ColumnName="English" />
           <ScalarProperty Name="IssueTxt" ColumnName="IssueTxt" />
           <ScalarProperty Name="PictureBytes" ColumnName="PictureBytes" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Pictures">
+      <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.Picture)">
+        <MappingFragment StoreEntitySet="Pictures">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Bytes" ColumnName="Bytes" />
+          <ScalarProperty Name="MarkerString" ColumnName="MarkerString" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

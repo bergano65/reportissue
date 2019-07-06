@@ -27,5 +27,6 @@ namespace ReportIssue
     
         public virtual DbSet<Filter> Filters { get; set; }
         public virtual DbSet<Issue> Issues { get; set; }
+        public virtual DbSet<Picture> Pictures { get; set; }
     }
 }

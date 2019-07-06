@@ -20,6 +20,9 @@ namespace ReportIssue
         public bool Selected { get; set; }
 
         [NotMapped]
+        public List<Picture> Pictures { get; set; }
+
+        [NotMapped]
         public List<Rectangle> Markers { get; set; }
 
         public Issue()
@@ -105,5 +108,6 @@ namespace ReportIssue
         {
 
         }
+
     }
 }

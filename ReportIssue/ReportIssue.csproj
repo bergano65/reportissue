@@ -261,6 +261,9 @@
       <DependentUpon>IssuePropertiesList.xaml</DependentUpon>
     </Compile>
     <Compile Include="IssueTemplatesTabControl.cs" />
+    <Compile Include="Picture.cs">
+      <DependentUpon>RIDataAccess.tt</DependentUpon>
+    </Compile>
     <Compile Include="RIDataAccess.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
