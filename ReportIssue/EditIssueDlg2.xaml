@@ -18,7 +18,7 @@
             <Border Margin="5, 5, 5, 5" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" BorderBrush="Green"
               BorderThickness="4" Background="AliceBlue" HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
-                <Canvas Name="_imgCanvas"/>
+                <TabControl Name="_pictureTabControl" />
             </Border>
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
                 <local:IssueTemplatesTabControl x:Name="_issuePropsTabControl" Width="400" Height="750" Margin="5, 5, 5, 5">
@@ -26,6 +26,10 @@
                         <XmlDataProvider Source="IssueType.xml"/>
                     </FrameworkElement.DataContext>
                 </local:IssueTemplatesTabControl>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 30, 0">
+                    <Button Click="addPictureButton_Click" Margin="5, 5, 5, 5" Height="25" Width="100">Add picture</Button>
+                    <Button Click="removePictureButton_Click" Margin="5, 5, 5, 5" Height="25" Width="100">Remove picture</Button>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 30, 0">
                     <Button Click="shotButton_Click" Margin="5, 5, 5, 5" Height="25" Width="100">Make ScreenShot</Button>
                     <Button Click="removeMarkButton_Click" Margin="5, 5, 5, 5" Height="25" Width="100">Remove Markers</Button>
