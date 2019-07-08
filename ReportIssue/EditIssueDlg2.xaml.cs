@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Data.Entity.Migrations;
 
 namespace ReportIssue
 {
@@ -88,6 +90,8 @@ namespace ReportIssue
                 return;
             }
            
+            EnsurePictureSelection();
+      
             this._tc.TrackEvent("Take Screenshot", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
             int selIndex =
                 _pictureTabControl.SelectedIndex != -1 ?
@@ -100,18 +104,15 @@ namespace ReportIssue
             this.WindowState = WindowState.Minimized;
             this._parentWindow.WindowState = WindowState.Minimized;
 
-            System.Drawing.Rectangle bounds1 = Screen.PrimaryScreen.Bounds;
-            int width1 = bounds1.Width;
-            bounds1 = Screen.PrimaryScreen.Bounds;
-            int height1 = bounds1.Height;
-            Bitmap bitmap = new Bitmap(width1, height1, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            System.Drawing.Rectangle bounds = Screen.PrimaryScreen.Bounds;
+            int width = bounds.Width;
+            int height = bounds.Height;
+            int x = bounds.X;
+            int y = bounds.Y;
+            System.Drawing.Size size = bounds.Size;
+
+            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             Graphics graphics = Graphics.FromImage((System.Drawing.Image)bitmap);
-            System.Drawing.Rectangle bounds2 = Screen.PrimaryScreen.Bounds;
-            int x = bounds2.X;
-            bounds2 = Screen.PrimaryScreen.Bounds;
-            int y = bounds2.Y;
-            bounds2 = Screen.PrimaryScreen.Bounds;
-            System.Drawing.Size size = bounds2.Size;
             graphics.CopyFromScreen(x, y, 0, 0, size, CopyPixelOperation.SourceCopy);
 
             shotPanel.SetPicture(bitmap);
@@ -123,15 +124,20 @@ namespace ReportIssue
 
         private void removeMarkButton_Click(object sender, RoutedEventArgs e)
         {
-            /*
-                        this._tc.TrackEvent("Remove markers", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                        if (!this._isImgDrawn)
-                            return;
-                        this.Markers.Clear();
-                        for (int index = this._imgCanvas.Children.Count - 1; index > 0; --index)
-                            this._imgCanvas.Children.RemoveAt(index);
-                        this._isIssueEdited = true;
-            */
+            this._tc.TrackEvent("Remove markers", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+            if (_pictureTabControl.Items.Count == 0)
+            {
+                return;            }
+
+            if (_pictureTabControl.Items.Count == 1)
+            {
+                _pictureTabControl.SelectedIndex = 0;
+            }
+
+            ShotPanel panel = (_pictureTabControl.SelectedItem as TabItem).Content as ShotPanel;
+            panel.RemoveMarkers();
+
+            this._isIssueEdited = true;
         }
 
         private void ShowIssue()
@@ -181,8 +187,9 @@ namespace ReportIssue
         private void SelectComboBoxItem(System.Windows.Controls.ComboBox comboBox, string value)
         {
             this._tc.TrackEvent("Select combo box item", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+
             foreach (ComboBoxItem comboBoxItem in (IEnumerable)comboBox.Items)
-            {
+            { 
                 if ((string)comboBoxItem.Content == value)
                 {
                     comboBoxItem.IsSelected = true;
@@ -193,48 +200,72 @@ namespace ReportIssue
 
         private bool SaveIssue()
         {
-            return true;
-            /*
             this._tc.TrackEvent("Save Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
             if (!this.CheckCurrentIssueProperties())
             {
                 int num = (int)System.Windows.MessageBox.Show("All values should be not empty", "Issue report");
                 return false;
             }
-            if (!this._isImgDrawn)
+
+            foreach (TabItem i in _pictureTabControl.Items)
             {
-                int num = (int)System.Windows.MessageBox.Show("Picture should be not empty", "Issue report");
-                return false;
+                ShotPanel shotPanel = i.Content as ShotPanel;
+                string msg;
+                if (!shotPanel.IsValid(out msg))
+               {
+                    System.Windows.MessageBox.Show(msg, "ReportIssue", MessageBoxButton.OK);
+                    return false;
+                }
             }
-            if (this.Markers.Count == 0)
-            {
-                int num = (int)System.Windows.MessageBox.Show("At least one marker should be present", "Issue report");
-                return false;
-            }
+
             this.PutCurrentIssueProperties();
-            this.CurrentIssue.Markers.Clear();
-            foreach (System.Drawing.Rectangle marker in this.Markers)
+
+            this.CurrentIssue.Pictures.Clear();
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (TabItem i in _pictureTabControl.Items)
             {
-                Bitmap picture = this.CurrentIssue.Picture;
-                double width1 = (double)picture.Width;
-                System.Windows.Size renderSize = this._imgCanvas.RenderSize;
-                double width2 = renderSize.Width;
-                double num1 = width1 / width2;
-                double height1 = (double)picture.Height;
-                renderSize = this._imgCanvas.RenderSize;
-                double height2 = renderSize.Height;
-                double num2 = height1 / height2;
-                this.CurrentIssue.Markers.Add(new System.Drawing.Rectangle((int)((double)marker.X * num1), (int)((double)marker.Y * num2), (int)((double)marker.Width * num1), (int)((double)marker.Height * num2)));
+                ShotPanel shotPanel = i.Content as ShotPanel;
+                shotPanel.Save();
+
+                if (_pictureTabControl.Items.IndexOf(i) > 0)
+                {
+                    stringBuilder.AppendFormat(",");
+                }
+
+                stringBuilder.AppendFormat("{0}", shotPanel.Picture.ID);
             }
+
+            this.CurrentIssue.PictureString = stringBuilder.ToString();
             this.CurrentIssue.Save();
-            this._isMarkerDrawn = false;
+
+            RIDataModelContainer d = new RIDataModelContainer();
+            foreach (Picture p in this.CurrentIssue.Pictures)
+            {
+                d.Pictures.AddOrUpdate(p);
+            }
+
+            d.Issues.AddOrUpdate(this.CurrentIssue);
+
             this._isIssueEdited = false;
             return true;
-            */
+        }
+        
+        private void EnsurePictureSelection()
+        { 
+            foreach (TabItem i in _pictureTabControl.Items)
+            {
+
+                ShotPanel panel = i.Content as ShotPanel;
+                if (panel.IsOpened())
+                {
+                    _pictureTabControl.SelectedItem = i;
+                }
+            }
         }
 
         private void _okBtn_Click(object sender, RoutedEventArgs e)
         {
+            EnsurePictureSelection();
             this._tc.TrackEvent("Save Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
             if (!this.SaveIssue())
                 return;

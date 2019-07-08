@@ -492,8 +492,9 @@ namespace ReportIssue
         {
             this._tc.TrackEvent("Get pictures", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
             List<string> stringList = new List<string>();
-            for (int index = 0; index < issues.ToList<Issue>().Count; ++index)
-            {
+         /*
+          *for (int index = 0; index < issues.ToList<Issue>().Count; ++index)
+           {
                 Issue issue = issues.ToList<Issue>()[index];
                 DrawingVisual drawingVisual = new DrawingVisual();
                 DrawingContext drawingContext = drawingVisual.RenderOpen();
@@ -515,6 +516,8 @@ namespace ReportIssue
                 using (Stream stream = (Stream)File.Create(path))
                     pngBitmapEncoder.Save(stream);
             }
+            */
+
             return stringList;
         }
 

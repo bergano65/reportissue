@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -29,6 +31,8 @@ namespace ReportIssue
         private bool _isImgDrawn;
         private bool _isMarkerDrawn;
         private TelemetryClient _tc;
+        public Picture Picture { get; set; }
+        private Bitmap Bitmap { get; set; }
 
         [DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
@@ -161,7 +165,66 @@ namespace ReportIssue
 
         public void RemoveMarkers()
         {
+            if (!this._isImgDrawn)
+            {
+                this.ImgCanvas.Children.Clear();
+            }
+            else
+            {
+                while (this.ImgCanvas.Children.Count > 1)
+                {
+                    this.ImgCanvas.Children.RemoveAt(this.ImgCanvas.Children.Count - 1);
+                }
+            }
 
         }
+
+        public bool IsValid(out string msg)
+        {
+            if (!this._isImgDrawn)
+            {
+                msg = "Image isn't drawn";
+                return false;
+            }
+
+            if (this.Markers.Count == 0)
+            {
+                msg = "No markers defined";
+                return false;
+            }
+
+            msg = string.Empty;
+            return true;
+        }
+
+        public void Save()
+        {
+            StringBuilder markers = new StringBuilder();
+            foreach(System.Drawing.Rectangle m in this.Markers)
+            {
+                if (this.Markers.IndexOf(m) > 0)
+                {
+                    markers.Append(":");
+                    markers.AppendFormat("{0},{1},{2},{3}",
+                        m.Top, m.Left, m.Right, m.Bottom);
+                }
+            }
+
+            MemoryStream memoryStream = new MemoryStream();
+            this.Bitmap.Save((Stream)memoryStream, ImageFormat.Png);
+            this.Picture.Bytes = memoryStream.ToArray();
+        }
+
+        public bool IsOpened()
+        {
+            if (this._img.Visibility == Visibility.Visible)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
-}
+}       

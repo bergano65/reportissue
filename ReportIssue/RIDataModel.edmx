@@ -51,7 +51,6 @@
     <Property Name="Parameter20" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Url" Type="nvarchar(max)" Nullable="false" />
     <Property Name="BugPath" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="MarkersString" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Fixed" Type="bit" Nullable="false" />
     <Property Name="Submitted" Type="bit" Nullable="false" />
     <Property Name="Product" Type="nvarchar(max)" Nullable="false" />
@@ -61,13 +60,13 @@
     <Property Name="Right" Type="nvarchar(max)" Nullable="false" />
     <Property Name="English" Type="nvarchar(max)" Nullable="false" />
     <Property Name="IssueTxt" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="PictureBytes" Type="varbinary(max)" Nullable="false" />
+    <Property Name="PictureString" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="Pictures">
     <Key>
-      <PropertyRef Name="Id" />
+      <PropertyRef Name="ID" />
     </Key>
-    <Property Name="Id" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ID" Type="nvarchar" Nullable="false" MaxLength="256" />
     <Property Name="Bytes" Type="varbinary(max)" Nullable="false" />
     <Property Name="MarkerString" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
@@ -121,7 +120,6 @@
           <Property Name="Parameter20" Type="String" Nullable="false" />
           <Property Name="Url" Type="String" Nullable="false" />
           <Property Name="BugPath" Type="String" Nullable="false" />
-          <Property Name="MarkersString" Type="String" Nullable="false" />
           <Property Name="Fixed" Type="Boolean" Nullable="false" />
           <Property Name="Submitted" Type="Boolean" Nullable="false" />
           <Property Name="Product" Type="String" Nullable="false" />
@@ -131,13 +129,13 @@
           <Property Name="Right" Type="String" Nullable="false" />
           <Property Name="English" Type="String" Nullable="false" />
           <Property Name="IssueTxt" Type="String" Nullable="false" />
-          <Property Name="PictureBytes" Type="Binary" Nullable="false" />
+          <Property Name="PictureString" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="Picture">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="ID" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" MaxLength="256" />
           <Property Name="Bytes" Type="Binary" Nullable="false" />
           <Property Name="MarkerString" Type="String" Nullable="false" />
         </EntityType>
@@ -188,7 +186,6 @@
           <ScalarProperty Name="Parameter20" ColumnName="Parameter20" />
           <ScalarProperty Name="Url" ColumnName="Url" />
           <ScalarProperty Name="BugPath" ColumnName="BugPath" />
-          <ScalarProperty Name="MarkersString" ColumnName="MarkersString" />
           <ScalarProperty Name="Fixed" ColumnName="Fixed" />
           <ScalarProperty Name="Submitted" ColumnName="Submitted" />
           <ScalarProperty Name="Product" ColumnName="Product" />
@@ -198,14 +195,14 @@
           <ScalarProperty Name="Right" ColumnName="Right" />
           <ScalarProperty Name="English" ColumnName="English" />
           <ScalarProperty Name="IssueTxt" ColumnName="IssueTxt" />
-          <ScalarProperty Name="PictureBytes" ColumnName="PictureBytes" />
+          <ScalarProperty Name="PictureString" ColumnName="PictureString" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Pictures">
       <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.Picture)">
         <MappingFragment StoreEntitySet="Pictures">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Bytes" ColumnName="Bytes" />
           <ScalarProperty Name="MarkerString" ColumnName="MarkerString" />
         </MappingFragment>

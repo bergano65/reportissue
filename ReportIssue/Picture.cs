@@ -14,7 +14,7 @@ namespace ReportIssue
     
     public partial class Picture
     {
-        public string Id { get; set; }
+        public string ID { get; set; }
         public byte[] Bytes { get; set; }
         public string MarkerString { get; set; }
     }

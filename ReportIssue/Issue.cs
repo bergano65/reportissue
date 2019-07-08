@@ -39,7 +39,6 @@ namespace ReportIssue
         public string Parameter20 { get; set; }
         public string Url { get; set; }
         public string BugPath { get; set; }
-        public string MarkersString { get; set; }
         public bool Fixed { get; set; }
         public bool Submitted { get; set; }
         public string Product { get; set; }
@@ -49,6 +48,6 @@ namespace ReportIssue
         public string Right { get; set; }
         public string English { get; set; }
         public string IssueTxt { get; set; }
-        public byte[] PictureBytes { get; set; }
+        public string PictureString { get; set; }
     }
 }

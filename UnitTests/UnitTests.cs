@@ -22,8 +22,6 @@ namespace UnitTests
                 i.Url = "l";
                 i.Selected = true;
                 i.IssueTxt = "it";
-                i.MarkersString = "ms";
-                i.PictureBytes = new byte[5];
                 i.Product = "p";
                 i.Reason = "r";
                 i.Right = "rr";
