@@ -31,6 +31,8 @@ namespace ReportIssue
         private bool _isImgDrawn;
         private bool _isMarkerDrawn;
         private TelemetryClient _tc;
+        private MemoryStream _openStream;
+
         public Picture Picture { get; set; }
         private Bitmap Bitmap { get; set; }
 
@@ -44,12 +46,14 @@ namespace ReportIssue
         private IOperationHolder<RequestTelemetry> _markerOp;
         private System.Windows.Point _markerStartPosition;
         private System.Windows.Shapes.Rectangle _markerRect;
+        private System.Drawing.Rectangle sr;
 
         public ShotPanel()
         {
             InitializeComponent();
             this._tc = new TelemetryClient();
 
+            this.Picture = new Picture();
             this.Markers = new List<System.Drawing.Rectangle>();
             this._timer = new System.Windows.Forms.Timer();
             this._timer.Interval = 50;
@@ -72,7 +76,7 @@ namespace ReportIssue
        private void DrawMarker(System.Windows.Point mousePosition)
         {
             this._tc.TrackEvent("Draw Marker", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-            Rect markerRect = this.GetMarkerRect(this._markerStartPosition, mousePosition);
+            System.Drawing.Rectangle markerRect = this.GetMarkerRect(this._markerStartPosition, mousePosition);
             Canvas.SetLeft((UIElement)this._markerRect, markerRect.X);
             Canvas.SetTop((UIElement)this._markerRect, markerRect.Y);
             this._markerRect.Width = markerRect.Width;
@@ -81,6 +85,7 @@ namespace ReportIssue
 
         public void SetPicture(Bitmap bitmap)
         {
+            this.Bitmap = bitmap;
             IntPtr hbitmap = bitmap.GetHbitmap();
             IntPtr palette = (IntPtr)0;
             Int32Rect sourceRect = new Int32Rect(0, 0, bitmap.Width, bitmap.Height);
@@ -120,16 +125,19 @@ namespace ReportIssue
         {
             if (!this._isImgDrawn)
                 return;
-            if (!this._isMarkerDrawn)
+            if (!this._isMarkerDrawn)   
                 return;
 
             this._tc.TrackEvent("Finish marker", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
             this._tc.StopOperation<RequestTelemetry>(this._markerOp);
-            Rect markerRect = this.GetMarkerRect(this._markerStartPosition, Mouse.GetPosition((IInputElement)this._img));
-            this.Markers.Add(new System.Drawing.Rectangle((int)markerRect.X, (int)markerRect.Y, (int)markerRect.Width, (int)markerRect.Height));
+            System.Drawing.Rectangle markerRect = this.GetMarkerRect(this._markerStartPosition, Mouse.GetPosition((IInputElement)this._img));
+            Canvas.SetRight(this._markerRect, markerRect.Right);
+            Canvas.SetBottom(this._markerRect, markerRect.Bottom);
+            this.Markers.Add(markerRect);
             this._markerRect = (System.Windows.Shapes.Rectangle)null;
             this._isMarkerDrawn = false;
         }
+
 
         private void _img_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -152,14 +160,75 @@ namespace ReportIssue
             this._isMarkerDrawn = true;
          }
 
-            private Rect GetMarkerRect(System.Windows.Point markerStartPosition, System.Windows.Point mousePosition)
+        public void Open()
         {
-            return new Rect()
+            if (this.Picture == null)
             {
-                X = Math.Min(markerStartPosition.X, mousePosition.X),
-                Y = Math.Min(markerStartPosition.Y, mousePosition.Y),
-                Width = Math.Abs(markerStartPosition.X - mousePosition.X),
-                Height = Math.Abs(markerStartPosition.Y - mousePosition.Y)
+                return;
+            }
+
+            if (this.Picture.Bytes == null)
+            {
+                return;
+            }
+
+            this._openStream = new MemoryStream(this.Picture.Bytes);
+
+            this.Bitmap = new Bitmap((Stream)this._openStream);
+
+            if (ImgCanvas.RenderSize.Width == 0 || ImgCanvas.RenderSize.Height == 0)
+            {
+                return;
+            }
+
+            this.ImgCanvas.Children.Clear();
+
+            if (this.Picture.MarkerString == null)
+            {
+                this.Picture.MarkerString = "";
+            }
+
+            SetPicture(this.Bitmap);
+
+
+            try
+            {
+                string[] markArray = this.Picture.MarkerString.Split(':');
+                foreach (string m in markArray)
+                {
+                    string[] strArray = m.Split(':');
+                    int num = strArray.Length / 4;
+                    for (int index = 0; index < num; ++index)
+                    {
+                        System.Drawing.Rectangle sr =
+                            ScaleRectangle(
+                                new System.Drawing.Rectangle(
+                                    int.Parse(strArray[index * 4]),
+                                    int.Parse(strArray[(index * 4) + 1]),
+                                    int.Parse(strArray[(index * 4) + 2]),
+                                    int.Parse(strArray[(index * 4) + 3])),
+                                    false);
+                        this.Markers.Add(sr);
+                        System.Windows.Shapes.Rectangle dr = new System.Windows.Shapes.Rectangle();
+                        Canvas.SetLeft((UIElement)dr, sr.X);
+                        Canvas.SetTop((UIElement)dr, sr.Y);
+                        this.ImgCanvas.Children.Add((UIElement)dr);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        private System.Drawing.Rectangle GetMarkerRect(System.Windows.Point markerStartPosition, System.Windows.Point mousePosition)
+        {
+            return new System.Drawing.Rectangle()
+            {
+                X = (int)Math.Min(markerStartPosition.X, mousePosition.X),
+                Y = (int)Math.Min(markerStartPosition.Y, mousePosition.Y),
+                Width = (int)Math.Abs(markerStartPosition.X - mousePosition.X),
+                Height = (int)Math.Abs(markerStartPosition.Y - mousePosition.Y)
             };
         }
 
@@ -176,7 +245,6 @@ namespace ReportIssue
                     this.ImgCanvas.Children.RemoveAt(this.ImgCanvas.Children.Count - 1);
                 }
             }
-
         }
 
         public bool IsValid(out string msg)
@@ -205,19 +273,37 @@ namespace ReportIssue
                 if (this.Markers.IndexOf(m) > 0)
                 {
                     markers.Append(":");
-                    markers.AppendFormat("{0},{1},{2},{3}",
-                        m.Top, m.Left, m.Right, m.Bottom);
                 }
+
+                System.Drawing.Rectangle sr = ScaleRectangle(m, true);
+                markers.AppendFormat("{0},{1},{2},{3}",
+                    sr.Top, sr.Left, sr.Right, sr.Bottom);
             }
 
+            this.Picture.MarkerString = markers.ToString();
             MemoryStream memoryStream = new MemoryStream();
             this.Bitmap.Save((Stream)memoryStream, ImageFormat.Png);
             this.Picture.Bytes = memoryStream.ToArray();
         }
 
+        private System.Drawing.Rectangle ScaleRectangle(System.Drawing.Rectangle m, bool toScreeen)
+        {
+            int scaleY = (int)((double)this.Bitmap.Height / (double)this.ImgCanvas.RenderSize.Height);
+            int scaleX = (int)((double)this.Bitmap.Width / (double)this.ImgCanvas.RenderSize.Width);
+            if (toScreeen)
+            { 
+                return new System.Drawing.Rectangle(m.X * scaleX, m.Y * scaleY, m.Width * scaleX, m.Height * scaleY); 
+            }   
+            else
+            {
+                return new System.Drawing.Rectangle(m.X / scaleX, m.Y / scaleY, m.Width / scaleX, m.Height / scaleY);
+
+            }
+        }
+
         public bool IsOpened()
         {
-            if (this._img.Visibility == Visibility.Visible)
+            if (this.ImgCanvas.Visibility == Visibility.Visible)
             {
                 return true;
             }
@@ -227,4 +313,4 @@ namespace ReportIssue
             }
         }
     }
-}       
+}     

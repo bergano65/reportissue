@@ -19,6 +19,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Validation;
 
 namespace ReportIssue
 {
@@ -77,6 +78,8 @@ namespace ReportIssue
         {
             TabItem item = new TabItem();
             item.Content = new ShotPanel();
+            Picture picture = new Picture();
+            this.CurrentIssue.Pictures.Add(picture);
             item.Header = string.Format("Picture {0}", _pictureTabControl.Items.Count + 1);
             _pictureTabControl.Items.Add(item);
             _pictureTabControl.SelectedIndex = _pictureTabControl.Items.Count - 1;
@@ -100,9 +103,13 @@ namespace ReportIssue
             ShotPanel shotPanel = (_pictureTabControl.Items[selIndex] as TabItem).Content as ShotPanel;
 
             this._windowState = this.WindowState;
-            this._parentWindowState = this._parentWindow.WindowState;
+            if (this._parentWindow != null)
+            {
+                this._parentWindowState = this._parentWindow.WindowState;
+                this._parentWindow.WindowState = WindowState.Minimized;
+            }
+
             this.WindowState = WindowState.Minimized;
-            this._parentWindow.WindowState = WindowState.Minimized;
 
             System.Drawing.Rectangle bounds = Screen.PrimaryScreen.Bounds;
             int width = bounds.Width;
@@ -117,8 +124,13 @@ namespace ReportIssue
 
             shotPanel.SetPicture(bitmap);
 
-            this._parentWindow.WindowState = this._parentWindowState;
+            if (this._parentWindow != null)
+            {
+                this._parentWindow.WindowState = this._parentWindowState;
+            }
+
             this.WindowState = this._windowState;
+            this.Activate();
 
     }
 
@@ -128,8 +140,8 @@ namespace ReportIssue
             if (_pictureTabControl.Items.Count == 0)
             {
                 return;            }
-
             if (_pictureTabControl.Items.Count == 1)
+
             {
                 _pictureTabControl.SelectedIndex = 0;
             }
@@ -142,46 +154,39 @@ namespace ReportIssue
 
         private void ShowIssue()
         {
-            /*
             this._tc.TrackEvent("Show Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
             this._isIssueEdited = false;
             this.CurrentIssue.Open();
-            Bitmap picture = this.CurrentIssue.Picture;
-            IntPtr hbitmap = picture.GetHbitmap();
-            IntPtr palette = (IntPtr)0;
-            Int32Rect sourceRect = new Int32Rect(0, 0, picture.Width, picture.Height);
-            System.Windows.Size renderSize = this._imgCanvas.RenderSize;
-            int width = (int)renderSize.Width;
-            renderSize = this._imgCanvas.RenderSize;
-            int height = (int)renderSize.Height;
-            BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromWidthAndHeight(width, height);
-            BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hbitmap, palette, sourceRect, sizeOptions);
-            this._img = new System.Windows.Controls.Image();
-            this._img.Source = (ImageSource)sourceFromHbitmap;
-            this._imgCanvas.Children.Insert(0, (UIElement)this._img);
-            Canvas.SetLeft((UIElement)this._img, 0.0);
-            Canvas.SetRight((UIElement)this._img, 0.0);
-            EditIssueDlg2.DeleteObject(hbitmap);
-            this._isMarkerDrawn = false;
-            this._isImgDrawn = true;
-            foreach (System.Drawing.Rectangle marker in this.CurrentIssue.Markers)
-            {
-                double num1 = this._imgCanvas.RenderSize.Width / (double)picture.Width;
-                double num2 = this._imgCanvas.RenderSize.Height / (double)picture.Height;
-                System.Drawing.Rectangle rectangle1 = new System.Drawing.Rectangle((int)((double)marker.X * num1), (int)((double)marker.Y * num2), (int)((double)marker.Width * num1), (int)((double)marker.Height * num2));
-                this.Markers.Add(rectangle1);
-                System.Windows.Shapes.Rectangle rectangle2 = new System.Windows.Shapes.Rectangle();
-                rectangle2.Stroke = (System.Windows.Media.Brush)new SolidColorBrush(Colors.Red);
-                rectangle2.Fill = (System.Windows.Media.Brush)System.Windows.Media.Brushes.Transparent;
-                rectangle2.StrokeThickness = 2.0;
-                Canvas.SetLeft((UIElement)rectangle2, (double)rectangle1.X);
-                Canvas.SetTop((UIElement)rectangle2, (double)rectangle1.Y);
-                rectangle2.Width = (double)rectangle1.Width;
-                rectangle2.Height = (double)rectangle1.Height;
-                this._imgCanvas.Children.Add((UIElement)rectangle2);
-            }
             this._issuePropsTabControl.GetIssueProperties(this.CurrentIssue);
-            */
+            ShowPictures();
+        }
+
+       private void ShowPictures()
+       {
+            int picNum = 1;
+            RIDataModelContainer d = new RIDataModelContainer();
+            string[] pictureIds = this.CurrentIssue.PictureString.Split(',');
+            foreach(string id in pictureIds)
+            {
+                Picture p = d.Pictures.Find(id);
+                ShotPanel shotPanel = new ShotPanel();
+
+                TabItem tabItem = new TabItem();
+                tabItem.Content = shotPanel;
+                _pictureTabControl.Items.Add(tabItem);
+                _pictureTabControl.SelectedIndex = _pictureTabControl.Items.Count - 1;
+                _pictureTabControl.SelectionChanged += _pictureTabControl_SelectionChanged;
+                tabItem.Header = string.Format("Picture {0}", picNum++);
+                shotPanel.Picture = p;
+                shotPanel.Open();
+            } 
+       }
+
+        private void _pictureTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TabItem tabItem = _pictureTabControl.SelectedItem as TabItem;
+            ShotPanel panel = tabItem.Content as ShotPanel;
+            panel.Open();
         }
 
         private void SelectComboBoxItem(System.Windows.Controls.ComboBox comboBox, string value)
@@ -200,60 +205,86 @@ namespace ReportIssue
 
         private bool SaveIssue()
         {
-            this._tc.TrackEvent("Save Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-            if (!this.CheckCurrentIssueProperties())
+            try
             {
-                int num = (int)System.Windows.MessageBox.Show("All values should be not empty", "Issue report");
-                return false;
-            }
 
-            foreach (TabItem i in _pictureTabControl.Items)
-            {
-                ShotPanel shotPanel = i.Content as ShotPanel;
-                string msg;
-                if (!shotPanel.IsValid(out msg))
-               {
-                    System.Windows.MessageBox.Show(msg, "ReportIssue", MessageBoxButton.OK);
+                this._tc.TrackEvent("Save Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                if (!this.CheckCurrentIssueProperties())
+                {
+                    int num = (int)System.Windows.MessageBox.Show("All values should be not empty", "Issue report");
                     return false;
                 }
-            }
 
-            this.PutCurrentIssueProperties();
-
-            this.CurrentIssue.Pictures.Clear();
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (TabItem i in _pictureTabControl.Items)
-            {
-                ShotPanel shotPanel = i.Content as ShotPanel;
-                shotPanel.Save();
-
-                if (_pictureTabControl.Items.IndexOf(i) > 0)
+                if (_pictureTabControl.Items.Count == 0)
                 {
-                    stringBuilder.AppendFormat(",");
+                    int num = (int)System.Windows.MessageBox.Show("Add at least one picture", "Issue report");
+                    return false;
                 }
 
-                stringBuilder.AppendFormat("{0}", shotPanel.Picture.ID);
+
+                foreach (TabItem i in _pictureTabControl.Items)
+                {
+                    ShotPanel shotPanel = i.Content as ShotPanel;
+                    string msg;
+                    if (!shotPanel.IsValid(out msg))
+                    {
+                        System.Windows.MessageBox.Show(msg, "ReportIssue", MessageBoxButton.OK);
+                        return false;
+                    }
+                }
+
+                this.PutCurrentIssueProperties();
+
+                this.CurrentIssue.Pictures.Clear();
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (TabItem i in _pictureTabControl.Items)
+                {
+                    ShotPanel shotPanel = i.Content as ShotPanel;
+                    shotPanel.Save();
+                    this.CurrentIssue.Pictures.Add(shotPanel.Picture);
+
+                    if (_pictureTabControl.Items.IndexOf(i) > 0)
+                    {
+                        stringBuilder.AppendFormat(",");
+                    }
+
+                    stringBuilder.AppendFormat("{0}", shotPanel.Picture.ID);
+                }
+
+                this.CurrentIssue.PictureString = stringBuilder.ToString();
+                this.CurrentIssue.Save();
+
+                RIDataModelContainer d = new RIDataModelContainer();
+                foreach (Picture p in this.CurrentIssue.Pictures)
+                {
+                    d.Pictures.AddOrUpdate(p);
+                }
+
+                d.Issues.AddOrUpdate(this.CurrentIssue);
+                d.SaveChanges();
+                this._isIssueEdited = false;
+                return true;
             }
-
-            this.CurrentIssue.PictureString = stringBuilder.ToString();
-            this.CurrentIssue.Save();
-
-            RIDataModelContainer d = new RIDataModelContainer();
-            foreach (Picture p in this.CurrentIssue.Pictures)
+            catch (DbEntityValidationException e)
             {
-                d.Pictures.AddOrUpdate(p);
+                foreach (DbEntityValidationResult r in e.EntityValidationErrors)
+                {   
+                    foreach (var err in r.ValidationErrors)
+                    {
+                        Console.WriteLine(err.PropertyName);
+                        Console.WriteLine(err.ErrorMessage);
+                    }
+                }
             }
 
-            d.Issues.AddOrUpdate(this.CurrentIssue);
+            return false;
 
-            this._isIssueEdited = false;
-            return true;
         }
-        
+
         private void EnsurePictureSelection()
-        { 
+        {     
             foreach (TabItem i in _pictureTabControl.Items)
-            {
+  {
 
                 ShotPanel panel = i.Content as ShotPanel;
                 if (panel.IsOpened())
@@ -261,7 +292,7 @@ namespace ReportIssue
                     _pictureTabControl.SelectedItem = i;
                 }
             }
-        }
+        } 
 
         private void _okBtn_Click(object sender, RoutedEventArgs e)
         {

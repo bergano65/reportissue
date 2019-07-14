@@ -8,8 +8,14 @@ namespace UnitTests
 {
     [TestClass]
     public class UnitTests
-
     {
+        [TestMethod]
+        public void TestEditIssue()
+        {
+            EditIssueDlg2 editIssueDlg = new EditIssueDlg2(null, null);
+            editIssueDlg.ShowDialog();
+        }
+
         [TestMethod]
         public void TestSaveIssue()
         {
@@ -41,6 +47,7 @@ namespace UnitTests
                 i.Parameter9 = "p9";
                 i.Parameter10 = "p9";
                 i.Parameter11 = "p11";
+
                 i.Parameter12 = "p1";
                 i.Parameter13 = "p2";
                 i.Parameter14 = "p3";
@@ -72,6 +79,7 @@ namespace UnitTests
                 Exception ie = e.InnerException;
             }
         }
+
     }
 }
 

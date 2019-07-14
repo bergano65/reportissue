@@ -14,9 +14,6 @@ namespace ReportIssue
         [NotMapped]
         private MemoryStream _openStream;
 
-        [NotMapped]
-        public Bitmap Picture { get; set; }
-
         public bool Selected { get; set; }
 
         [NotMapped]
@@ -61,6 +58,7 @@ namespace ReportIssue
             this.Parameter19 = "";
             this.Parameter20 = "";
             this.UpdateTime = DateTime.Now;
+            this.Pictures = new List<Picture>();
         }
 
         public void Open()
