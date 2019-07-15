@@ -91,7 +91,7 @@ namespace ReportIssue
             Int32Rect sourceRect = new Int32Rect(0, 0, bitmap.Width, bitmap.Height);
 //            BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height);
 
-             System.Windows.Size renderSize = ImgCanvas.RenderSize;
+             System.Windows.Size renderSize = new System.Windows.Size(900, 800);
                 int width2 = (int)renderSize.Width;
                 int height2 = (int)renderSize.Height;
                 BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromWidthAndHeight(width2, height2);
@@ -175,11 +175,6 @@ namespace ReportIssue
             this._openStream = new MemoryStream(this.Picture.Bytes);
 
             this.Bitmap = new Bitmap((Stream)this._openStream);
-
-            if (ImgCanvas.RenderSize.Width == 0 || ImgCanvas.RenderSize.Height == 0)
-            {
-                return;
-            }
 
             this.ImgCanvas.Children.Clear();
 
@@ -288,8 +283,8 @@ namespace ReportIssue
 
         private System.Drawing.Rectangle ScaleRectangle(System.Drawing.Rectangle m, bool toScreeen)
         {
-            int scaleY = (int)((double)this.Bitmap.Height / (double)this.ImgCanvas.RenderSize.Height);
-            int scaleX = (int)((double)this.Bitmap.Width / (double)this.ImgCanvas.RenderSize.Width);
+            int scaleY = (int)((double)this.Bitmap.Height / 700);
+            int scaleX = (int)((double)this.Bitmap.Width / 800);
             if (toScreeen)
             { 
                 return new System.Drawing.Rectangle(m.X * scaleX, m.Y * scaleY, m.Width * scaleX, m.Height * scaleY); 
