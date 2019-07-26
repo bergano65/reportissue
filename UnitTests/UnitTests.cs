@@ -12,7 +12,7 @@ namespace UnitTests
         [TestMethod]
         public void TestEditIssue()
         {
-            EditIssueDlg2 editIssueDlg = new EditIssueDlg2(null, null);
+            EditIssueDlg editIssueDlg = new EditIssueDlg(null, null);
             editIssueDlg.ShowDialog();
         }
 

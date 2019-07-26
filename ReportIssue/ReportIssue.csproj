@@ -243,8 +243,17 @@
     <Compile Include="ChooseMailDlg.xaml.cs">
       <DependentUpon>ChooseMailDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditIssueDlg.xaml.cs">
+      <DependentUpon>EditIssueDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditIssueDlg3.xaml.cs">
+      <DependentUpon>EditIssueDlg3.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditIssueDlg2.xaml.cs">
       <DependentUpon>EditIssueDlg2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditIssueDlg4.xaml.cs">
+      <DependentUpon>EditIssueDlg4.xaml</DependentUpon>
     </Compile>
     <Compile Include="Filter.cs">
       <DependentUpon>RIDataAccess.tt</DependentUpon>
@@ -265,6 +274,7 @@
     <Compile Include="Picture.cs">
       <DependentUpon>RIDataAccess.tt</DependentUpon>
     </Compile>
+    <Compile Include="PictureHolder.cs" />
     <Compile Include="RIDataAccess.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -288,7 +298,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="EditIssueDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditIssueDlg3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="EditIssueDlg2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditIssueDlg4.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

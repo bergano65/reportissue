@@ -17,5 +17,6 @@ namespace ReportIssue
         public string ID { get; set; }
         public byte[] Bytes { get; set; }
         public string MarkerString { get; set; }
+        public string Name { get; set; }
     }
 }

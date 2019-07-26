@@ -48,6 +48,8 @@ namespace ReportIssue
         private System.Windows.Shapes.Rectangle _markerRect;
         private System.Drawing.Rectangle sr;
 
+        private List<System.Windows.Shapes.Rectangle> rectangles = new List<System.Windows.Shapes.Rectangle>();
+
         public ShotPanel()
         {
             InitializeComponent();
@@ -101,8 +103,6 @@ namespace ReportIssue
             this._img = new System.Windows.Controls.Image();
             this._img.Source = (ImageSource)sourceFromHbitmap;
 
-//            this._img.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hbitmap, palette, sourceRect, sizeOptions);
-//            this._img.Stretch = Stretch.Fill;
 
             this._isImgDrawn = true;
 
@@ -183,7 +183,7 @@ namespace ReportIssue
                 this.Picture.MarkerString = "";
             }
 
-            SetPicture(this.Bitmap);
+           SetPicture(this.Bitmap);
 
 
             try
@@ -191,9 +191,9 @@ namespace ReportIssue
                 string[] markArray = this.Picture.MarkerString.Split(':');
                 foreach (string m in markArray)
                 {
-                    string[] strArray = m.Split(':');
+                    string[] strArray = m.Split(',');
                     int num = strArray.Length / 4;
-                    for (int index = 0; index < num; ++index)
+                    for (int index = 0; index < num; index++)
                     {
                         System.Drawing.Rectangle sr =
                             ScaleRectangle(
@@ -205,14 +205,25 @@ namespace ReportIssue
                                     false);
                         this.Markers.Add(sr);
                         System.Windows.Shapes.Rectangle dr = new System.Windows.Shapes.Rectangle();
+                        dr.Stroke = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
+                        dr.StrokeThickness = 2;
+                        dr.Visibility = Visibility.Visible;
+                        dr.Fill = System.Windows.Media.Brushes.Transparent;
+                        dr.Opacity = 0;
+                        dr.Width = sr.Width;
+                        dr.Height = sr.Height;
+                        Panel.SetZIndex((UIElement)dr, 3);
                         Canvas.SetLeft((UIElement)dr, sr.X);
                         Canvas.SetTop((UIElement)dr, sr.Y);
-                        this.ImgCanvas.Children.Add((UIElement)dr);
+                        Canvas.SetRight((UIElement)dr, sr.Right);
+                        Canvas.SetBottom((UIElement)dr, sr.Bottom);
+                            this.ImgCanvas.Children.Add((UIElement)dr);
+                        this.rectangles.Add(dr);
                     }
                 }
             }
             catch (Exception e)
-            {
+                {
             }
         }
 
@@ -283,8 +294,8 @@ namespace ReportIssue
 
         private System.Drawing.Rectangle ScaleRectangle(System.Drawing.Rectangle m, bool toScreeen)
         {
-            int scaleY = (int)((double)this.Bitmap.Height / 700);
-            int scaleX = (int)((double)this.Bitmap.Width / 800);
+            int scaleY = (int)((double)this.Bitmap.Height / 750);
+            int scaleX = (int)((double)this.Bitmap.Width / 650);
             if (toScreeen)
             { 
                 return new System.Drawing.Rectangle(m.X * scaleX, m.Y * scaleY, m.Width * scaleX, m.Height * scaleY); 

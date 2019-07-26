@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 07/08/2019 22:50:33
+-- Date Created: 07/19/2019 18:44:34
 -- Generated from EDMX file: C:\projects\ReportIssue\ReportIssue\RIDataModel.edmx
 -- --------------------------------------------------
 
@@ -92,7 +92,8 @@ GO
 CREATE TABLE [dbo].[Pictures] (
     [ID] nvarchar(256)  NOT NULL,
     [Bytes] varbinary(max)  NOT NULL,
-    [MarkerString] nvarchar(max)  NOT NULL
+    [MarkerString] nvarchar(max)  NOT NULL,
+    [Name] nvarchar(max)  NOT NULL
 );
 GO
 

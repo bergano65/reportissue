@@ -69,6 +69,7 @@
     <Property Name="ID" Type="nvarchar" Nullable="false" MaxLength="256" />
     <Property Name="Bytes" Type="varbinary(max)" Nullable="false" />
     <Property Name="MarkerString" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -138,6 +139,7 @@
           <Property Name="ID" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" MaxLength="256" />
           <Property Name="Bytes" Type="Binary" Nullable="false" />
           <Property Name="MarkerString" Type="String" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -205,6 +207,7 @@
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Bytes" ColumnName="Bytes" />
           <ScalarProperty Name="MarkerString" ColumnName="MarkerString" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

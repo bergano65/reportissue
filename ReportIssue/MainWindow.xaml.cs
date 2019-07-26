@@ -51,6 +51,7 @@ namespace ReportIssue
         private Filter _findFilter;
         private Filter _filter;
         private XmlDocument _cfgDoc;
+        private bool _isIssueEdited;
 
         private Issue _currentIssue { get; set; }
 
@@ -63,8 +64,9 @@ namespace ReportIssue
 
         public MainWindow()
         {
+
             this._tc = new TelemetryClient();
-       this._tc.Context.User.AuthenticatedUserId = "eviten@microsoft.com";
+            this._tc.Context.User.AuthenticatedUserId = "eviten@microsoft.com";
             this._tc.Context.Session.Id = Guid.NewGuid().ToString();
             IOperationHolder<RequestTelemetry> operation = this._tc.StartOperation<RequestTelemetry>("Start");
             this._tc.TrackEvent("Start", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
@@ -72,15 +74,17 @@ namespace ReportIssue
             this._issues = new ObservableCollection<Issue>(this._data.Issues.ToList<Issue>());
             this._cfgDoc = new XmlDocument();
             this._cfgDoc.Load(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), "IssueType.xml"));
+
             if (!this.CheckTemplates())
             {
                 this._tc.TrackEvent("Check templates failed", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 this._tc.StopOperation<RequestTelemetry>(operation);
                 System.Windows.Application.Current.Shutdown();
             }
+
             if (this._data.Filters.Count<Filter>() > 0)
             {
-                this._filter = this._data.Filters.First<Filter>();
+               this._filter = this._data.Filters.First<Filter>();
             }
             else
             {
@@ -98,6 +102,7 @@ namespace ReportIssue
             this._tc.StopOperation<RequestTelemetry>(operation);
             this._issueNum = -1;
         }
+
 
         private XmlNode GetIssueTemplate(string type)
         {
@@ -170,9 +175,15 @@ namespace ReportIssue
             try
             {
                 IOperationHolder<RequestTelemetry> operation = this._tc.StartOperation<RequestTelemetry>("New Issue");
+                if (this._isIssueEdited)
+                {
+                    return;
+                }
+
                 this._tc.TrackEvent("New Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 this._currentIssue = new Issue();
-                EditIssueDlg2 editIssueDlg2 = new EditIssueDlg2((Window)this, (Issue)null);
+                this._isIssueEdited = true;
+                EditIssueDlg editIssueDlg2 = new EditIssueDlg((Window)this, (Issue)null);
                 editIssueDlg2.ShowDialog();
                 if (editIssueDlg2.Saved)
                 {
@@ -185,10 +196,11 @@ namespace ReportIssue
                     this._tc.TrackEvent("New Issue canceled", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 this.RedrawList();
                 this._tc.StopOperation<RequestTelemetry>(operation);
+                this._isIssueEdited = false;
             }
             catch (System.Exception e)
             {
-
+                this._isIssueEdited = false;
             }
         } 
 
@@ -541,23 +553,26 @@ namespace ReportIssue
                 else
                 {
                     this._currentIssue = this._issues[selectedIndex];
-                    EditIssueDlg2 editIssueDlg2 = new EditIssueDlg2((Window)this, this._currentIssue);
+                    EditIssueDlg editIssueDlg2 = new EditIssueDlg((Window)this, this._currentIssue);
                     editIssueDlg2.ShowDialog();
-                    if (editIssueDlg2.Saved)
-                    {
-                        this._currentIssue = editIssueDlg2.CurrentIssue;
-                        this._issues[selectedIndex] = this._currentIssue;
-                        this._data.Issues.AddOrUpdate<Issue>(new Issue[1]
-                        {
-                this._currentIssue
-                        });
-                        this._data.SaveChanges();
-                        this._tc.TrackEvent("Issue edited", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                    }
-                    else
-                        this._tc.TrackEvent("Issue edit canceled", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                    this.RedrawList();
-                    this._tc.StopOperation<RequestTelemetry>(operation);
+                    /*
+                     *if (editIssueDlg2.Saved)
+                                        {
+                                            this._currentIssue = editIssueDlg2.CurrentIssue;
+                                            this._issues[selectedIndex] = this._currentIssue;
+                                            this._data.Issues.AddOrUpdate<Issue>(new Issue[1]
+                                            {
+                                    this._currentIssue
+                                            });
+                                            this._data.SaveChanges();
+                                            this._tc.TrackEvent("Issue edited", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                                        }
+                                        else
+                                            this._tc.TrackEvent("Issue edit canceled", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                                        this.RedrawList();
+                                        this._tc.StopOperation<RequestTelemetry>(operation);
+                                    }
+                    */
                 }
             }
             catch (System.Exception ee)

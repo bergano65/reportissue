@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ReportIssue"
              mc:Ignorable="d" 
-                 d:DesignHeight="450" d:DesignWidth="600">
-        <Canvas x:Name="ImgCanvas" Width="450" Height="450" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                 d:DesignHeight="650" d:DesignWidth="600">
+    <Canvas x:Name="ImgCanvas" Width="650" Height="600" VerticalAlignment="Top" HorizontalAlignment="Left">
+    </Canvas>
 </UserControl>
