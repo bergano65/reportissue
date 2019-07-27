@@ -43,7 +43,6 @@ namespace ReportIssue
         private System.Windows.Point _markerStartPosition;
         private System.Windows.Shapes.Rectangle _markerRect;
         private Picture _currentPicture;
-        private List<System.Drawing.Rectangle> Markers;
         private Bitmap Bitmap;
 
         public bool Saved { get; set; }
@@ -62,7 +61,6 @@ namespace ReportIssue
             this._timer = new System.Windows.Forms.Timer();
             this._timer.Tick += _timer_Tick;
             this._timer.Start();
-            this.Markers = new List<System.Drawing.Rectangle>();
             this.CurrentIssue = issue;
             if (issue != null)
             {
@@ -100,13 +98,14 @@ namespace ReportIssue
 
             RIDataModelContainer d = new RIDataModelContainer();
 
-            this._currentPicture = new Picture();
-            Picture p = this._currentPicture;
+            Picture p = new Picture();
+            p.IsOpened = true;
 
             System.Windows.Controls.ListBoxItem item = new System.Windows.Controls.ListBoxItem();
             item.Content = string.Format("Picture - {0}", _pictureList.Items.Count + 1);
-            item.DataContext = this._currentPicture;
+            item.DataContext = p;
             _pictureList.Items.Add(item);
+            _pictureList.SelectedIndex = _pictureList.Items.Count - 1;
         
         }
 
@@ -150,7 +149,7 @@ namespace ReportIssue
 
         private bool SavePicture(Picture picture)
         {
-            if (this._currentPicture == null)
+            if (picture == null)
             {
                 return true;
             }
@@ -162,17 +161,12 @@ namespace ReportIssue
                 return false;
             }
 
-            if (this.Markers.Count == 0)
+
+            if (this._currentPicture.Markers.Count == 0)
             {
                 this._pictureList.SelectedIndex = FindPicture(picture);
                 System.Windows.MessageBox.Show("No markers defined", "Report Issue");
                 return false;
-            }
-
-            this._currentPicture.Markers.Clear();
-            foreach (System.Drawing.Rectangle r in this.Markers)
-            {
-                this._currentPicture.Markers.Add(ScaleMarker(r, true));
             }
 
             this._currentPicture.Bitmap = this.Bitmap;
@@ -308,7 +302,7 @@ namespace ReportIssue
                 this._tc.TrackEvent("Finish marker", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 this._tc.StopOperation<RequestTelemetry>(this._markerOp);
                 System.Drawing.Rectangle markerRect = this.GetMarkerRect(this._markerStartPosition, Mouse.GetPosition((IInputElement)this._img));
-                this.Markers.Add(markerRect);
+                this._currentPicture.Markers.Add(ScaleMarker(markerRect, false));
                 this._markerRect = (System.Windows.Shapes.Rectangle)null;
                 this._isIssueEdited = true;
                 this._isMarkerDrawn = false;
@@ -328,7 +322,7 @@ namespace ReportIssue
 
         private System.Drawing.Rectangle GetMarkerRect(System.Windows.Point markerStartPosition, System.Windows.Point mousePosition)
         {
-            return new System.Drawing.Rectangle()
+              return new System.Drawing.Rectangle()
             {
                 X = (int)Math.Min(markerStartPosition.X, mousePosition.X),
                 Y = (int)Math.Min(markerStartPosition.Y, mousePosition.Y),
@@ -358,7 +352,7 @@ namespace ReportIssue
                 return;
             }
 
-            this.Markers.Clear();
+            this._currentPicture.Markers.Clear();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -417,8 +411,21 @@ namespace ReportIssue
 
         private void ShowPicture(Picture picture)
         {
+            this._currentPicture = picture;
+
             this.ImgCanvas.Children.Clear();
+
+            if (picture == null)
+            {
+                return;
+            }
+
             picture.Open();
+
+            if (picture.Bitmap == null)
+            {
+                return;
+            }
 
             IntPtr hbitmap = picture.Bitmap.GetHbitmap();
             IntPtr palette = (IntPtr)0;
@@ -440,13 +447,15 @@ namespace ReportIssue
             {
                 System.Drawing.Rectangle sr = ScaleMarker(r, false);
                 System.Windows.Shapes.Rectangle markerRect = new System.Windows.Shapes.Rectangle();
-                this._markerRect.Stroke = (System.Windows.Media.Brush)new SolidColorBrush(Colors.Red);
-                this._markerRect.StrokeThickness = 2.0;
+                markerRect.Stroke = (System.Windows.Media.Brush)new SolidColorBrush(Colors.Red);
+                markerRect.StrokeThickness = 2.0;
+                markerRect.Width = sr.Width;
+                markerRect.Height = sr.Height;
                 Canvas.SetLeft((UIElement)markerRect, sr.X);
                 Canvas.SetTop((UIElement)markerRect, sr.Y);
+                Canvas.SetRight((UIElement)markerRect, sr.Right);
+                Canvas.SetBottom((UIElement)markerRect, sr.Bottom);
                 this.ImgCanvas.Children.Add((UIElement)markerRect);
-                this._isMarkerDrawn = true;
-
             }
 
             DeleteObject(hbitmap);

@@ -542,6 +542,11 @@ namespace ReportIssue
         {
             try
             {
+                if (this._isIssueEdited)
+                {
+                    return;
+                }
+
                 IOperationHolder<RequestTelemetry> operation = this._tc.StartOperation<RequestTelemetry>("Edit Issue");
                 this._tc.TrackEvent("Edit Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 int selectedIndex = this._issueList.SelectedIndex;

@@ -11,6 +11,10 @@ namespace ReportIssue
 {
     public partial class Picture
     {
+        private MemoryStream _openStream;
+
+        public bool IsOpened { get; set; }
+
         [NotMapped]
         public Bitmap Bitmap { get; set; }
 
@@ -19,6 +23,7 @@ namespace ReportIssue
 
         public Picture()
         {
+            this.IsOpened = false;
             this.ID = Guid.NewGuid().ToString();
             this.Markers = new List<Rectangle>();
         }
@@ -59,11 +64,55 @@ namespace ReportIssue
             MemoryStream memoryStream = new MemoryStream();
             this.Bitmap.Save((Stream)memoryStream, ImageFormat.Png);
             this.Bytes = memoryStream.ToArray();
+
+            this.IsOpened = true;
         }
 
         public void Open()
         {
+            if (this.IsOpened)
+            {
+                return;
+            }
 
+            if (this.Bitmap == null)
+            {
+                if (this.Bytes != null)
+                {
+                    this._openStream = new MemoryStream(Bytes);
+                    this.Bitmap = new Bitmap((Stream)this._openStream);
+                }
+            }
+
+            if (this.MarkerString == null)
+            {
+                return;
+            }
+
+            try
+            {
+                string[] markArray = this.MarkerString.Split(':');
+                foreach (string m in markArray)
+                {
+                    string[] strArray = m.Split(',');
+                    int num = strArray.Length / 4;
+                    for (int index = 0; index < num; index++)
+                    {
+                        System.Drawing.Rectangle sr =
+                                new System.Drawing.Rectangle(
+                                    int.Parse(strArray[index * 4]),
+                                    int.Parse(strArray[(index * 4) + 1]),
+                                    int.Parse(strArray[(index * 4) + 2]),
+                                    int.Parse(strArray[(index * 4) + 3]));
+                        this.Markers.Add(sr);
+                    }
+
+                    this.IsOpened = true;
+                }
+            }
+            catch (Exception e)
+            {
+            }
         }
 
     }
