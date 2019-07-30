@@ -239,7 +239,7 @@ namespace ReportIssue
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (TabItem i in _pictureTabControl.Items)
                 {
-                    ShotPanel shotPanel = i.Content as ShotPanel;
+                 ShotPanel shotPanel = i.Content as ShotPanel;
                     shotPanel.Save();
                     this.CurrentIssue.Pictures.Add(shotPanel.Picture);
 

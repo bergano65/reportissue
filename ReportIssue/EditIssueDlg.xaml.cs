@@ -43,7 +43,6 @@ namespace ReportIssue
         private System.Windows.Point _markerStartPosition;
         private System.Windows.Shapes.Rectangle _markerRect;
         private Picture _currentPicture;
-        private Bitmap Bitmap;
 
         public bool Saved { get; set; }
         
@@ -74,6 +73,28 @@ namespace ReportIssue
 
         private void ShowIssue()
         {
+            this._tc.TrackEvent("Show Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+
+            this.ImgCanvas.Children.Clear();
+            this._pictureListView.Items.Clear();
+//            this._pictureList.Items.Clear();
+
+            this._isIssueEdited = false;
+            this._issuePropsTabControl.GetIssueProperties(this.CurrentIssue);
+
+            this.CurrentIssue.Open();
+            foreach (Picture p in this.CurrentIssue.Pictures)
+            {
+                System.Windows.Controls.ListViewItem item = new System.Windows.Controls.ListViewItem();
+//                ListBoxItem item = new ListBoxItem();
+                item.Content = p.Name;
+                item.DataContext = p;
+                this._pictureListView.Items.Add(item);
+//                this._pictureList.Items.Add(item);
+            }
+
+//            this._pictureList.SelectedIndex = 0;
+            this._pictureListView.SelectedIndex = 0;
         }
 
         private void NewIssue()
@@ -101,12 +122,21 @@ namespace ReportIssue
             Picture p = new Picture();
             p.IsOpened = true;
 
+            System.Windows.Controls.ListViewItem item = new System.Windows.Controls.ListViewItem();
+            /*
             System.Windows.Controls.ListBoxItem item = new System.Windows.Controls.ListBoxItem();
-            item.Content = string.Format("Picture - {0}", _pictureList.Items.Count + 1);
+             *p.Name = string.Format("Picture - {0}", _pictureList.Items.Count + 1);
+                        item.Content = p.Name;
+                        item.DataContext = p;
+                        _pictureList.Items.Add(item);
+                        _pictureList.SelectedIndex = _pictureList.Items.Count - 1;
+              */
+            p.Name = string.Format("Picture - {0}", _pictureListView.Items.Count + 1);
+            item.Content = p.Name;
             item.DataContext = p;
-            _pictureList.Items.Add(item);
-            _pictureList.SelectedIndex = _pictureList.Items.Count - 1;
-        
+            _pictureListView.Items.Add(item);
+            _pictureListView.SelectedIndex = _pictureListView.Items.Count - 1;
+
         }
 
         private void removePictureButton_Click(object sender, RoutedEventArgs e)
@@ -116,27 +146,58 @@ namespace ReportIssue
                 return;
 
             }
-                
-            if (_pictureList.Items.Count == 0)
+
+            /*
+             *if (_pictureList.Items.Count == 0)
+                        {
+                            return;
+                        }
+
+                         if (_pictureList.SelectedIndex != -1)
+                         {
+                            ListBoxItem i = (ListBoxItem)_pictureList.Items[_pictureList.SelectedIndex] as ListBoxItem;
+                            _pictureList.Items.Remove(i);
+                         }
+
+                        if (_pictureList.Items.Count > 0)
+                        {
+                            _pictureList.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            this._currentPicture = null;
+                            this._pictureList.SelectedIndex = -1;
+                        }
+              */
+
+            if (_pictureListView.Items.Count == 0)
             {
                 return;
             }
 
-            if (_pictureList.SelectedIndex != -1)
+            if (_pictureListView.SelectedIndex != -1)
             {
-                _pictureList.Items.RemoveAt(_pictureList.SelectedIndex);
+                System.Windows.Controls.ListViewItem i = (ListBoxItem)_pictureListView.Items[_pictureListView.SelectedIndex] as System.Windows.Controls.ListViewItem;
+//                ListBoxItem i = (ListBoxItem)_pictureListView.Items[_pictureListView.SelectedIndex] as ListBoxItem;
+                _pictureListView.Items.Remove(i);
             }
 
-            if (_pictureList.Items.Count > 0)
+            if (_pictureListView.Items.Count > 0)
             {
-                _pictureList.SelectedIndex = _pictureList.Items.Count - 1;
+                _pictureListView.SelectedIndex = 0;
             }
+            else
+            {
+                this._currentPicture = null;
+                this._pictureListView.SelectedIndex = -1;
+            }
+
         }
 
-        private System.Drawing.Rectangle ScaleMarker(System.Drawing.Rectangle from, bool toBitmap)
+        private System.Drawing.Rectangle ScaleMarker(Bitmap bitmap, System.Drawing.Rectangle from, bool toBitmap)
         {
-            double dX = (double)this.Bitmap.Width/(double)ImgCanvas.RenderSize.Width;
-            double dY = (double)this.Bitmap.Height / (double)ImgCanvas.RenderSize.Height;
+            double dX = (double)bitmap.Width/(double)805;
+            double dY = (double)bitmap.Height / (double) 750;
             if (toBitmap)
             {
                 return new System.Drawing.Rectangle((int)(from.X * dX), (int)(from.Y * dY), (int)(from.Width * dX), (int)(from.Height * dY));
@@ -154,25 +215,24 @@ namespace ReportIssue
                 return true;
             }
 
-            if (!this._isImgDrawn)
+            if (picture.Bitmap == null)
             {
-                this._pictureList.SelectedIndex = FindPicture(picture);
+//                this._pictureList.SelectedIndex = FindPicture(picture);
+                this._pictureListView.SelectedIndex = FindPicture(picture);
                 System.Windows.MessageBox.Show("No screen shot defined", "Report Issue");
                 return false;
             }
 
 
-            if (this._currentPicture.Markers.Count == 0)
+            if (picture.Markers.Count == 0)
             {
-                this._pictureList.SelectedIndex = FindPicture(picture);
+//                this._pictureList.SelectedIndex = FindPicture(picture);
+                this._pictureListView.SelectedIndex = FindPicture(picture);
                 System.Windows.MessageBox.Show("No markers defined", "Report Issue");
                 return false;
             }
 
-            this._currentPicture.Bitmap = this.Bitmap;
-            this._currentPicture.Save();
-
-            this._isPictureEdited = false;
+            picture.Save();
 
             return true;
         }
@@ -180,8 +240,9 @@ namespace ReportIssue
         private int FindPicture(Picture picture)
         {
             int num = 0;
-            foreach (System.Windows.Controls.ListBoxItem item in 
-                (this._pictureList.Items))
+            foreach (System.Windows.Controls.ListBoxItem item in
+                (this._pictureListView.Items))
+//                (this._pictureList.Items))
             {
                 Picture itemPicture = item.DataContext as Picture;
                 if (itemPicture == picture)
@@ -220,22 +281,22 @@ namespace ReportIssue
             int y = bounds.Y;
             System.Drawing.Size size = bounds.Size;
 
-            this.Bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            Graphics graphics = Graphics.FromImage((System.Drawing.Image)Bitmap);
+            this._currentPicture.Bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            Graphics graphics = Graphics.FromImage((System.Drawing.Image)this._currentPicture.Bitmap);
             graphics.CopyFromScreen(x, y, 0, 0, size, CopyPixelOperation.SourceCopy);
 
-            IntPtr hbitmap = this.Bitmap.GetHbitmap();
+            IntPtr hbitmap = this._currentPicture.Bitmap.GetHbitmap();
             IntPtr palette = (IntPtr)0;
-            Int32Rect sourceRect = new Int32Rect(0, 0, this.Bitmap.Width, this.Bitmap.Height);
+            Int32Rect sourceRect = new Int32Rect(0, 0, this._currentPicture.Bitmap.Width, this._currentPicture.Bitmap.Height);
             //            BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height);
 
             System.Windows.Size renderSize = ImgCanvas.RenderSize;
-            int width2 = (int)renderSize.Width;
-            int height2 = (int)renderSize.Height;
+            int width2 = 805; // (int)renderSize.Width;
+            int height2 = 750; // (int)renderSize.Height;
             BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromWidthAndHeight(width2, height2);
             BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hbitmap, palette, sourceRect, sizeOptions);
 
-
+    
             this._img = new System.Windows.Controls.Image();
             this._img.Source = (ImageSource)sourceFromHbitmap;
 
@@ -276,9 +337,18 @@ namespace ReportIssue
                 return;
             }
             if (!this._isImgDrawn)
+            {
                 return;
+            }
+
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
+                System.Windows.Point pos = Mouse.GetPosition(relativeTo: this.ImgCanvas);
+                if (pos.X <= 0 || pos.X > 805 || pos.Y <= 0 || pos.Y > 750 )
+                {
+                    return;
+                }
+
                 if (!this._isMarkerDrawn)
                 {
                     this._tc.TrackEvent("Start marker", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
@@ -302,7 +372,7 @@ namespace ReportIssue
                 this._tc.TrackEvent("Finish marker", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 this._tc.StopOperation<RequestTelemetry>(this._markerOp);
                 System.Drawing.Rectangle markerRect = this.GetMarkerRect(this._markerStartPosition, Mouse.GetPosition((IInputElement)this._img));
-                this._currentPicture.Markers.Add(ScaleMarker(markerRect, false));
+               this._currentPicture.Markers.Add(ScaleMarker(this._currentPicture.Bitmap, markerRect, true));
                 this._markerRect = (System.Windows.Shapes.Rectangle)null;
                 this._isIssueEdited = true;
                 this._isMarkerDrawn = false;
@@ -353,6 +423,10 @@ namespace ReportIssue
             }
 
             this._currentPicture.Markers.Clear();
+            while (this.ImgCanvas.Children.Count > 1)
+            {
+                this.ImgCanvas.Children.RemoveAt(this.ImgCanvas.Children.Count - 1);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -362,27 +436,78 @@ namespace ReportIssue
 
         private void _okBtn_Click(object sender, RoutedEventArgs e)
         {
-             
+            this._tc.TrackEvent("Save Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+            if (!this.SaveIssue())
+                return;
+            this.Saved = true;
+            DialogResult = true;
+            Close();
+        }
+
+        private void PutCurrentIssueProperties()
+        {
+            this._issuePropsTabControl.PutIssueProperties(ref this.CurrentIssue);
+        }
+
+        private bool CheckCurrentIssueProperties()
+        {
+            return this._issuePropsTabControl.CheckIssueProperties();
+        }
+
+        private bool SaveIssue()
+        {
+            this._tc.TrackEvent("Save Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+
+            if (!this.CheckCurrentIssueProperties())
+            {
+                int num = (int)System.Windows.MessageBox.Show("All values should be not empty", "Issue report");
+                return false;
+            }
+
+            this.PutCurrentIssueProperties();
             RIDataModelContainer d = new RIDataModelContainer();
 
-            for (int i = 0; i < this._pictureList.Items.Count; i++)
+            this.CurrentIssue.Pictures.Clear();
+            for (int i = 0; i < this._pictureListView.Items.Count; i++)
             {
-                 var item = this._pictureList.Items[i];
-                 PictureHolder pictureHolder = (PictureHolder)item;
-                Picture picture = pictureHolder.Data as Picture;
-               
+                System.Windows.Controls.ListViewItem item = _pictureListView.Items[i] as System.Windows.Controls.ListViewItem;
+                Picture picture = (Picture)item.DataContext;
+
+                this.CurrentIssue.Pictures.Add(picture);
+                d.Pictures.AddOrUpdate(picture);
                 if (!SavePicture(picture))
                 {
-                    return;
+                    return false;
                 }
 
             }
 
+/*
+ *for (int i = 0; i < this._pictureList.Items.Count; i++)
+            {
+                 ListBoxItem item = this._pictureList.Items[i] as ListBoxItem;
+                 Picture picture = (Picture)item.DataContext;
+
+                 this.CurrentIssue.Pictures.Add(picture);
+                 d.Pictures.AddOrUpdate(picture);
+                 if (!SavePicture(picture))
+                 {
+                    return false;
+                 }
+
+            }
+*/
+            this.CurrentIssue.Save();
+            d.Issues.AddOrUpdate(this.CurrentIssue);
+
             d.SaveChanges();
+            return true;
         }
 
         private void _cancelBtn_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
+            this.Close();
         }
 
         private void _pictureList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -390,7 +515,8 @@ namespace ReportIssue
             // if selected item is same as current not check
             if (e.AddedItems.Count > 0)
             {
-                ListBoxItem i = e.AddedItems[0] as ListBoxItem;
+                System.Windows.Controls.ListViewItem i = e.AddedItems[0] as System.Windows.Controls.ListViewItem;
+//                ListBoxItem i = e.AddedItems[0] as ListBoxItem;
                 if ((i.DataContext as Picture) == this._currentPicture)
                 {
                     return;
@@ -402,8 +528,11 @@ namespace ReportIssue
                 return;
             }
 
-            ListBoxItem item = _pictureList.Items[_pictureList.SelectedIndex] as ListBoxItem;
+            System.Windows.Controls.ListViewItem item = _pictureListView.Items[_pictureListView.SelectedIndex] as System.Windows.Controls.ListViewItem;
+//            ListBoxItem item = _pictureList.Items[_pictureList.SelectedIndex] as ListBoxItem;
             Picture picture = item.DataContext as Picture;
+            this._currentPicture = picture;
+
             ShowPicture(picture);
 
             this._isPictureEdited = false;
@@ -429,12 +558,12 @@ namespace ReportIssue
 
             IntPtr hbitmap = picture.Bitmap.GetHbitmap();
             IntPtr palette = (IntPtr)0;
-            Int32Rect sourceRect = new Int32Rect(0, 0, this.Bitmap.Width, this.Bitmap.Height);
+            Int32Rect sourceRect = new Int32Rect(0, 0, picture.Bitmap.Width, picture.Bitmap.Height);
             //            BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height);
 
             System.Windows.Size renderSize = ImgCanvas.RenderSize;
-            int width2 = (int)renderSize.Width;
-            int height2 = (int)renderSize.Height;
+            int width2 = 805; // (int)renderSize.Width;
+            int height2 = 750; //  (int)renderSize.Height;
             BitmapSizeOptions sizeOptions = BitmapSizeOptions.FromWidthAndHeight(width2, height2);
             BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hbitmap, palette, sourceRect, sizeOptions);
 
@@ -445,7 +574,7 @@ namespace ReportIssue
 
             foreach (System.Drawing.Rectangle r in picture.Markers)
             {
-                System.Drawing.Rectangle sr = ScaleMarker(r, false);
+                System.Drawing.Rectangle sr = ScaleMarker(picture.Bitmap, r, false);
                 System.Windows.Shapes.Rectangle markerRect = new System.Windows.Shapes.Rectangle();
                 markerRect.Stroke = (System.Windows.Media.Brush)new SolidColorBrush(Colors.Red);
                 markerRect.StrokeThickness = 2.0;
@@ -466,3 +595,4 @@ namespace ReportIssue
         }
     }
 }
+ 

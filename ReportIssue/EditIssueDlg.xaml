@@ -18,22 +18,14 @@
             <Border Margin="5, 5, 5, 5" Grid.Row="0" Grid.Column="0" BorderBrush="Green"
               BorderThickness="4" Background="AliceBlue" HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
-                <Canvas Height="750" Name="ImgCanvas"/>
+                <Canvas Width="805" Height="750" Name="ImgCanvas"/>
             </Border>
-            <ListBox x:Name="_pictureList" SelectionChanged="_pictureList_SelectionChanged"  Grid.Row="1" Grid.Column="0">
+<!--            <ListBox x:Name="_pictureList" SelectionChanged="_pictureList_SelectionChanged"  Grid.Row="1" Grid.Column="0">
             </ListBox>
-<!--              <ListView Sel∟tectionChanged="_pictureList_SelectionChanged" Grid.Row="1" Grid.Column="0" x:Name="_pictureList" Margin="5,5,5,5" Height="85" >
-                <GridView>
-                    <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding Path=Display}">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path=Display}" Width="100" Height="30"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                </GridView>               
-            </ListView>
 -->            
+             <ListView SelectionChanged="_pictureList_SelectionChanged" Grid.Row="1" Grid.Column="0" x:Name="_pictureListView" Margin="5,5,5,5" Height="85" >
+            </ListView>
+            
             <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Orientation="Vertical">
                 <local:IssueTemplatesTabControl x:Name="_issuePropsTabControl" Width="400" Height="750" Margin="5, 5, 5, 5">
                     <FrameworkElement.DataContext>
@@ -55,4 +47,4 @@
             </StackPanel>
         </Grid>
     </ScrollViewer>
-</Window>  
+</Window>   
