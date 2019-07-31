@@ -474,29 +474,29 @@ namespace ReportIssue
                 Picture picture = (Picture)item.DataContext;
 
                 this.CurrentIssue.Pictures.Add(picture);
-                d.Pictures.AddOrUpdate(picture);
                 if (!SavePicture(picture))
                 {
                     return false;
                 }
 
+                d.Pictures.AddOrUpdate(picture);
             }
 
-/*
- *for (int i = 0; i < this._pictureList.Items.Count; i++)
-            {
-                 ListBoxItem item = this._pictureList.Items[i] as ListBoxItem;
-                 Picture picture = (Picture)item.DataContext;
+            /*
+             *for (int i = 0; i < this._pictureList.Items.Count; i++)
+                        {
+                             ListBoxItem item = this._pictureList.Items[i] as ListBoxItem;
+                             Picture picture = (Picture)item.DataContext;
 
-                 this.CurrentIssue.Pictures.Add(picture);
-                 d.Pictures.AddOrUpdate(picture);
-                 if (!SavePicture(picture))
-                 {
-                    return false;
-                 }
+                             this.CurrentIssue.Pictures.Add(picture);
+                             d.Pictures.AddOrUpdate(picture);
+                             if (!SavePicture(picture))
+                             {
+                                return false;
+                             }
 
-            }
-*/
+                        }
+            */
             this.CurrentIssue.Save();
             d.Issues.AddOrUpdate(this.CurrentIssue);
 
@@ -540,7 +540,7 @@ namespace ReportIssue
 
         private void ShowPicture(Picture picture)
         {
-            this._currentPicture = picture;
+//            this._currentPicture = picture;
 
             this.ImgCanvas.Children.Clear();
 

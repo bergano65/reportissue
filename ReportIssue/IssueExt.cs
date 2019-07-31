@@ -81,7 +81,18 @@ namespace ReportIssue
         public void Save()
         {
             this.UpdateTime = DateTime.Now;
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (Picture p in this.Pictures)
+            {
+                if (this.Pictures.IndexOf(p) > 0)
+                {
+                    stringBuilder.Append(",");
+                }
 
+                stringBuilder.AppendFormat("{0}", p.ID);
+            }
+
+            this.PictureString = stringBuilder.ToString();
         }
 
         public Issue(Issue from)
