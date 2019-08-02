@@ -109,7 +109,7 @@ namespace ReportIssue
         {
             // save currento picture if exists
             if (this._currentPicture != null)
-            {
+          {
                 if (!SavePicture(this._currentPicture))
                 {
                     return;

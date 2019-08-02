@@ -65,11 +65,12 @@ namespace ReportIssue
         {
             RIDataModelContainer d = new RIDataModelContainer();
 
-            this.Pictures.Clear();    
+            this.Pictures.Clear();
             string[] ids = this.PictureString.Split(',');
-            foreach(string id in ids)
+            foreach (string id in ids)
             {
                 Picture p = d.Pictures.Find(id);
+                p.Open();
                 if (p != null)
                 {
                     this.Pictures.Add(p);

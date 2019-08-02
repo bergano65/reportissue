@@ -57,7 +57,7 @@ namespace ReportIssue
                 }
 
                 markers.AppendFormat("{0},{1},{2},{3}",
-                    m.Top, m.Left, m.Right, m.Bottom);
+                    m.Top, m.Left, m.Width, m.Height);
             }
 
             this.MarkerString = markers.ToString();
