@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 07/30/2019 19:15:30
+-- Date Created: 08/05/2019 05:27:39
 -- Generated from EDMX file: C:\projects\ReportIssue\ReportIssue\RIDataModel.edmx
 -- --------------------------------------------------
 
@@ -30,6 +30,9 @@ IF OBJECT_ID(N'[dbo].[Issues]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Pictures]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Pictures];
+GO
+IF OBJECT_ID(N'[dbo].[Markers]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Markers];
 GO
 
 -- --------------------------------------------------
@@ -97,6 +100,16 @@ CREATE TABLE [dbo].[Pictures] (
 );
 GO
 
+-- Creating table 'Markers'
+CREATE TABLE [dbo].[Markers] (
+    [Id] nvarchar(256)  NOT NULL,
+    [Top] int  NOT NULL,
+    [Left] int  NOT NULL,
+    [Width] int  NOT NULL,
+    [Height] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -117,6 +130,12 @@ GO
 ALTER TABLE [dbo].[Pictures]
 ADD CONSTRAINT [PK_Pictures]
     PRIMARY KEY CLUSTERED ([ID] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Markers'
+ALTER TABLE [dbo].[Markers]
+ADD CONSTRAINT [PK_Markers]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- --------------------------------------------------

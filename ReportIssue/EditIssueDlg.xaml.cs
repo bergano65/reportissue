@@ -23,7 +23,7 @@ using System.Windows.Shapes;
 namespace ReportIssue
 {
 
-    /// <summary>
+    /// <summary>2
     /// Interaction logic for EditIssueDlg.xaml
     /// </summary>
     public partial class EditIssueDlg : Window
@@ -43,6 +43,7 @@ namespace ReportIssue
         private System.Windows.Point _markerStartPosition;
         private System.Windows.Shapes.Rectangle _markerRect;
         private Picture _currentPicture;
+        private TextBlock _markerTxtBlock;
 
         public bool Saved { get; set; }
         
@@ -341,11 +342,13 @@ namespace ReportIssue
                 return;
             }
 
+            System.Windows.Point pos = Mouse.GetPosition(relativeTo: this.ImgCanvas);
+            _mousePositionTxtBlock.Text = string.Format("{0}:{1}", pos.X, pos.Y);
+
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                System.Windows.Point pos = Mouse.GetPosition(relativeTo: this.ImgCanvas);
                 if (pos.X <= 0 || pos.X > 805 || pos.Y <= 0 || pos.Y > 750 )
-                {
+                {   
                     return;
                 }
 
@@ -356,10 +359,17 @@ namespace ReportIssue
                     this._markerStartPosition = Mouse.GetPosition((IInputElement)this._img);
                     this._markerRect = new System.Windows.Shapes.Rectangle();
                     this._markerRect.Stroke = (System.Windows.Media.Brush)new SolidColorBrush(Colors.Red);
-                    this._markerRect.StrokeThickness = 2.0;
+                    this._markerRect.StrokeThickness = 2.0; 
                     Canvas.SetLeft((UIElement)this._markerRect, this._markerStartPosition.X);
                     Canvas.SetTop((UIElement)this._markerRect, this._markerStartPosition.Y);
                     this.ImgCanvas.Children.Add((UIElement)this._markerRect);
+
+                    _markerTxtBlock = new TextBlock();
+                    _markerTxtBlock.Foreground = System.Windows.Media.Brushes.Green;
+                    Canvas.SetLeft((UIElement)this._markerTxtBlock, this._markerStartPosition.X + 5);
+                    Canvas.SetTop((UIElement)this._markerTxtBlock, this._markerStartPosition.Y + 5);
+                        ImgCanvas.Children.Add(this._markerTxtBlock);
+
                     this._isMarkerDrawn = true;
                 }
                 else
@@ -371,9 +381,10 @@ namespace ReportIssue
                     return;
                 this._tc.TrackEvent("Finish marker", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 this._tc.StopOperation<RequestTelemetry>(this._markerOp);
-                System.Drawing.Rectangle markerRect = this.GetMarkerRect(this._markerStartPosition, Mouse.GetPosition((IInputElement)this._img));
-               this._currentPicture.Markers.Add(ScaleMarker(this._currentPicture.Bitmap, markerRect, true));
-                this._markerRect = (System.Windows.Shapes.Rectangle)null;
+                Marker marker = this.GetMarker(this._markerStartPosition, Mouse.GetPosition((IInputElement)this._img));
+//               this._currentPicture.Markers.Add(ScaleMarker(this._currentPicture.Bitmap, markerRect, true));
+           this._currentPicture.Markers.Add(marker);
+               this._markerRect = (System.Windows.Shapes.Rectangle)null;
                 this._isIssueEdited = true;
                 this._isMarkerDrawn = false;
                 this._isPictureEdited = true; 
@@ -383,19 +394,23 @@ namespace ReportIssue
     private void DrawMarker(System.Windows.Point mousePosition)
     {
         this._tc.TrackEvent("Draw Marker", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-        System.Drawing.Rectangle markerRect = this.GetMarkerRect(this._markerStartPosition, mousePosition);
-        Canvas.SetLeft((UIElement)this._markerRect, markerRect.X);
-        Canvas.SetTop((UIElement)this._markerRect, markerRect.Y);
-        this._markerRect.Width = markerRect.Width;
-        this._markerRect.Height = markerRect.Height;
-    }
+        Marker marker = this.GetMarker(this._markerStartPosition, mousePosition);
+        Canvas.SetLeft((UIElement)this._markerRect, marker.Left);
+        Canvas.SetTop((UIElement)this._markerRect, marker.Top);
+        this._markerRect.Width = marker.Width;
+        this._markerRect.Height = marker.Height;
 
-        private System.Drawing.Rectangle GetMarkerRect(System.Windows.Point markerStartPosition, System.Windows.Point mousePosition)
+            // draw text
+            _markerTxtBlock.Text = string.Format("{0},{1}:{2},{3}", marker.Top, marker.Left, marker.Width, marker.Height);
+
+        }
+
+        private Marker GetMarker(System.Windows.Point markerStartPosition, System.Windows.Point mousePosition)
         {
-              return new System.Drawing.Rectangle()
+            return new Marker()
             {
-                X = (int)Math.Min(markerStartPosition.X, mousePosition.X),
-                Y = (int)Math.Min(markerStartPosition.Y, mousePosition.Y),
+                Left = (int)Math.Min(markerStartPosition.X, mousePosition.X),
+                Top = (int)Math.Min(markerStartPosition.Y, mousePosition.Y),
                 Width = (int)Math.Abs(markerStartPosition.X - mousePosition.X),
                 Height = (int)Math.Abs(markerStartPosition.Y - mousePosition.Y)
             };
@@ -423,9 +438,18 @@ namespace ReportIssue
             }
 
             this._currentPicture.Markers.Clear();
-            while (this.ImgCanvas.Children.Count > 1)
+            List<object> list = new List<object>();
+            foreach (var c in ImgCanvas.Children)
             {
-                this.ImgCanvas.Children.RemoveAt(this.ImgCanvas.Children.Count - 1);
+                if (c is TextBlock || c is System.Windows.Shapes.Rectangle)
+                {
+                    list.Add(c);
+                }
+            }
+
+            foreach (var c in list)
+            {
+                this.ImgCanvas.Children.Remove((UIElement)c);
             }
         }
 
@@ -480,6 +504,10 @@ namespace ReportIssue
                 }
 
                 d.Pictures.AddOrUpdate(picture);
+                foreach (Marker m in picture.Markers)
+                {
+                    d.Markers.AddOrUpdate(m);
+                }
             }
 
             /*
@@ -506,7 +534,6 @@ namespace ReportIssue
 
         private void _cancelBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
             this.Close();
         }
 
@@ -553,8 +580,16 @@ namespace ReportIssue
 
             if (picture.Bitmap == null)
             {
-                return;
+              return;
             }
+
+            TextBlock t = new TextBlock();
+            t.Foreground = System.Windows.Media.Brushes.Green;
+            Canvas.SetLeft((UIElement)t, 0);
+            Canvas.SetTop((UIElement)t, 0);
+            ImgCanvas.Children.Add(t);
+            t.Text = "~";
+
 
             IntPtr hbitmap = picture.Bitmap.GetHbitmap();
             IntPtr palette = (IntPtr)0;
@@ -572,19 +607,26 @@ namespace ReportIssue
             this._img.Source = (ImageSource)sourceFromHbitmap;
             this.ImgCanvas.Children.Add(this._img);
 
-            foreach (System.Drawing.Rectangle r in picture.Markers)
+            foreach (Marker m in picture.Markers)
             {
-                System.Drawing.Rectangle sr = ScaleMarker(picture.Bitmap, r, false);
+//                System.Drawing.Rectangle sr = ScaleMarker(picture.Bitmap, r, false);
                 System.Windows.Shapes.Rectangle markerRect = new System.Windows.Shapes.Rectangle();
                 markerRect.Stroke = (System.Windows.Media.Brush)new SolidColorBrush(Colors.Red);
                 markerRect.StrokeThickness = 2.0;
-                markerRect.Width = sr.Width;
-                markerRect.Height = sr.Height;
-                Canvas.SetLeft((UIElement)markerRect, sr.X);
-                Canvas.SetTop((UIElement)markerRect, sr.Y);
-                Canvas.SetRight((UIElement)markerRect, sr.Right);
-                Canvas.SetBottom((UIElement)markerRect, sr.Bottom);
+                markerRect.Width = m.Width;
+                markerRect.Height = m.Height;
+                Canvas.SetLeft((UIElement)markerRect, m.Left);
+                Canvas.SetTop((UIElement)markerRect, m.Top);
+                Canvas.SetRight((UIElement)markerRect, m.Left + m.Width);
+                Canvas.SetBottom((UIElement)markerRect, m.Top + m.Height);
                 this.ImgCanvas.Children.Add((UIElement)markerRect);
+
+                TextBlock markerTxtBlock = new TextBlock();
+                markerTxtBlock.Foreground = System.Windows.Media.Brushes.Green;
+                Canvas.SetLeft((UIElement)markerTxtBlock, m.Left + 5);
+                Canvas.SetTop((UIElement)markerTxtBlock, m.Top + 5);
+                markerTxtBlock.Text = string.Format("{0},{1}:{2},{3}", m.Left, m.Top, m.Width, m.Height);
+                ImgCanvas.Children.Add(markerTxtBlock);
             }
 
             DeleteObject(hbitmap);

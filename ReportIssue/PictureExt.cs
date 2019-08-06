@@ -19,13 +19,13 @@ namespace ReportIssue
         public Bitmap Bitmap { get; set; }
 
         [NotMapped]
-        public List<Rectangle> Markers { get; set; }
+        public List<Marker> Markers { get; set; }
 
         public Picture()
         {
             this.IsOpened = false;
             this.ID = Guid.NewGuid().ToString();
-            this.Markers = new List<Rectangle>();
+            this.Markers = new List<Marker>();
         }
 
         public bool IsValid(out string msg)
@@ -35,7 +35,7 @@ namespace ReportIssue
                 msg = "Add at least one picture";
                 return false;
             }
-
+            
             if (this.Markers.Count == 0)
             {
                 msg = "Add at least one marker";
@@ -49,15 +49,14 @@ namespace ReportIssue
         public void Save()
         {
             StringBuilder markers = new StringBuilder();
-            foreach (System.Drawing.Rectangle m in this.Markers)
+            foreach (Marker m in this.Markers)
             {
                 if (this.Markers.IndexOf(m) > 0)
                 {
                     markers.Append(":");
                 }
 
-                markers.AppendFormat("{0},{1},{2},{3}",
-                    m.Top, m.Left, m.Width, m.Height);
+                markers.Append(m.ID);
             }
 
             this.MarkerString = markers.ToString();
@@ -89,26 +88,21 @@ namespace ReportIssue
                 return;
             }
 
+            RIDataModelContainer d = new RIDataModelContainer();
+
             try
             {
                 string[] markArray = this.MarkerString.Split(':');
                 foreach (string m in markArray)
                 {
-                    string[] strArray = m.Split(',');
-                    int num = strArray.Length / 4;
-                    for (int index = 0; index < num; index++)
+                    Marker marker = d.Markers.Find(m);
+                    if (marker != null)
                     {
-                        System.Drawing.Rectangle sr =
-                                new System.Drawing.Rectangle(
-                                    int.Parse(strArray[index * 4]),
-                                    int.Parse(strArray[(index * 4) + 1]),
-                                    int.Parse(strArray[(index * 4) + 2]),
-                                    int.Parse(strArray[(index * 4) + 3]));
-                        this.Markers.Add(sr);
+                        Markers.Add(marker);
                     }
-
-                    this.IsOpened = true;
                 }
+
+                this.IsOpened = true;
             }
             catch (Exception e)
             {

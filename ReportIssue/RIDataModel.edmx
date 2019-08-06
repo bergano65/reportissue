@@ -9,6 +9,7 @@
     <EntitySet Name="Filters" EntityType="RIDataModel.Store.Filters" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Issues" EntityType="RIDataModel.Store.Issues" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Pictures" EntityType="RIDataModel.Store.Pictures" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Markers" EntityType="RIDataModel.Store.Markers" store:Type="Tables" Schema="dbo" />
   </EntityContainer>
   <EntityType Name="Filters">
     <Key>
@@ -71,6 +72,16 @@
     <Property Name="MarkerString" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
+  <EntityType Name="Markers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" Nullable="false" MaxLength="256" />
+    <Property Name="Top" Type="int" Nullable="false" />
+    <Property Name="Left" Type="int" Nullable="false" />
+    <Property Name="Width" Type="int" Nullable="false" />
+    <Property Name="Height" Type="int" Nullable="false" />
+  </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -79,6 +90,7 @@
           <EntitySet Name="Filters" EntityType="RIDataModel.Filter" />
           <EntitySet Name="Issues" EntityType="RIDataModel.Issue" />
           <EntitySet Name="Pictures" EntityType="RIDataModel.Picture" />
+          <EntitySet Name="Markers" EntityType="RIDataModel.Marker" />
         </EntityContainer>
         <EntityType Name="Filter">
           <Key>
@@ -140,6 +152,16 @@
           <Property Name="Bytes" Type="Binary" Nullable="false" />
           <Property Name="MarkerString" Type="String" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Marker">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" MaxLength="256" />
+          <Property Name="Top" Type="Int32" Nullable="false" />
+          <Property Name="Left" Type="Int32" Nullable="false" />
+          <Property Name="Width" Type="Int32" Nullable="false" />
+          <Property Name="Height" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -208,6 +230,17 @@
           <ScalarProperty Name="Bytes" ColumnName="Bytes" />
           <ScalarProperty Name="MarkerString" ColumnName="MarkerString" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Markers">
+      <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.Marker)">
+        <MappingFragment StoreEntitySet="Markers">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="Top" ColumnName="Top" />
+          <ScalarProperty Name="Left" ColumnName="Left" />
+          <ScalarProperty Name="Width" ColumnName="Width" />
+          <ScalarProperty Name="Height" ColumnName="Height" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

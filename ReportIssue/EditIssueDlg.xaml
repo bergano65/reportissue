@@ -20,18 +20,19 @@
               VerticalAlignment="Stretch">
                 <Canvas Width="805" Height="750" Name="ImgCanvas"/>
             </Border>
-<!--            <ListBox x:Name="_pictureList" SelectionChanged="_pictureList_SelectionChanged"  Grid.Row="1" Grid.Column="0">
+<!--            <ListBtox x:Name="_pictureList" SelectionChanged="_pictureList_SelectionChanged"  Grid.Row="1" Grid.Column="0">
             </ListBox>
 -->            
              <ListView SelectionChanged="_pictureList_SelectionChanged" Grid.Row="1" Grid.Column="0" x:Name="_pictureListView" Margin="5,5,5,5" Height="85" >
             </ListView>
             
             <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Orientation="Vertical">
-                <local:IssueTemplatesTabControl x:Name="_issuePropsTabControl" Width="400" Height="750" Margin="5, 5, 5, 5">
+                <local:IssueTemplatesTabControl x:Name="_issuePropsTabControl" Width="400" Height="650" Margin="5, 5, 5, 5">
                     <FrameworkElement.DataContext>
                         <XmlDataProvider Source="IssueType.xml"/>
                     </FrameworkElement.DataContext>
                 </local:IssueTemplatesTabControl>
+                <TextBlock x:Name="_mousePositionTxtBlock"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="30, 0, 30, 0">
                     <Button Click="addPictureButton_Click" Margin="5, 5, 5, 5" Height="25" Width="100">Add picture</Button>
                     <Button Click="removePictureButton_Click" Margin="5, 5, 5, 5" Height="25" Width="100">Remove picture</Button>
@@ -47,4 +48,4 @@
             </StackPanel>
         </Grid>
     </ScrollViewer>
-</Window>   
+</Window> 

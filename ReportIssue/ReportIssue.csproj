@@ -269,6 +269,10 @@
     <Compile Include="Issue.cs">
       <DependentUpon>RIDataAccess.tt</DependentUpon>
     </Compile>
+    <Compile Include="Marker.cs">
+      <DependentUpon>RIDataAccess.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MarkerExt.cs" />
     <Compile Include="PictureExt.cs" />
     <Compile Include="IssueExt.cs" />
     <Compile Include="IssuePropertiesList.xaml.cs">
