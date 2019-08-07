@@ -234,7 +234,7 @@ namespace ReportIssue
             }
         }
 
-        private string GetReportMail(IEnumerable<Issue> issues)
+        private string GetReportMail(IEnumerable<Issue> issues, ref int pictureCount)
         {
             StringBuilder stringBuilder = new StringBuilder();
             foreach (Issue issue in issues)
@@ -271,8 +271,21 @@ namespace ReportIssue
                     stringBuilder.AppendFormat("<td>{0}</td>", (object)str);
                     stringBuilder.Append("</tr>");
                 }
+
+                stringBuilder.Append("<tr>");
+                // add pictures
+                stringBuilder.Append("<td>Pictures</td><td>");
+                issue.Open();
+                foreach (Picture p in issue.Pictures)
+                {
+                    stringBuilder.AppendFormat(" Picture-{0}.png", pictureCount++);
+                }
+                stringBuilder.Append("<td></tr>");
+
                 stringBuilder.Append("</table>");
             }
+
+
             return stringBuilder.ToString();
         }
 
@@ -467,7 +480,10 @@ namespace ReportIssue
                                 instance.CreateItem(OlItemType.olMailItem);
                         mailItem.Subject = "Document fixes";
                         mailItem.To = chooseMailDlg.Mail;
-                        mailItem.HTMLBody = this.GetReportMail(issues);
+
+                        int pictureCount = 1;
+                        mailItem.HTMLBody = this.GetReportMail(issues, ref pictureCount);
+
                         List<string> pictures = this.GetPictures(issues);
                         for (int index = 0; index < pictures.Count; ++index)
                         {
@@ -508,32 +524,39 @@ namespace ReportIssue
         private List<string> GetPictures(IEnumerable<Issue> issues)
         {
             this._tc.TrackEvent("Get pictures", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+            int pictureNum = 1;
             List<string> stringList = new List<string>();
-         /*
-          *for (int index = 0; index < issues.ToList<Issue>().Count; ++index)
+
+            for (int index = 0; index < issues.ToList<Issue>().Count; ++index)
            {
                 Issue issue = issues.ToList<Issue>()[index];
-                DrawingVisual drawingVisual = new DrawingVisual();
-                DrawingContext drawingContext = drawingVisual.RenderOpen();
-                if (issue.Picture == null)
-                    issue.Open();
-                BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(issue.Picture.GetHbitmap(), (IntPtr)0, new Int32Rect(0, 0, issue.Picture.Width, issue.Picture.Height), BitmapSizeOptions.FromWidthAndHeight(issue.Picture.Width, issue.Picture.Height));
-                drawingContext.DrawImage((ImageSource)sourceFromHbitmap, new Rect(0.0, 0.0, (double)issue.Picture.Width, (double)issue.Picture.Height));
-                foreach (System.Drawing.Rectangle marker in issue.Markers)
-                    drawingContext.DrawRectangle((System.Windows.Media.Brush)null, new System.Windows.Media.Pen((System.Windows.Media.Brush)System.Windows.Media.Brushes.Red, 2.0), new Rect((double)marker.X, (double)marker.Y, (double)marker.Width, (double)marker.Height));
-                drawingContext.Close();
-                RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(issue.Picture.Width, issue.Picture.Height, 96.0, 96.0, PixelFormats.Pbgra32);
-                renderTargetBitmap.Render((Visual)drawingVisual);
-                this._tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(this._tempFolder);
-                string path = Path.Combine(this._tempFolder, string.Format("Picture{0}.png", (object)(index + 1)));
-                stringList.Add(path);
-                PngBitmapEncoder pngBitmapEncoder = new PngBitmapEncoder();
-                pngBitmapEncoder.Frames.Add(BitmapFrame.Create((BitmapSource)renderTargetBitmap));
-                using (Stream stream = (Stream)File.Create(path))
-                    pngBitmapEncoder.Save(stream);
+
+                foreach (Picture p in issue.Pictures)
+                {
+
+                    DrawingVisual drawingVisual = new DrawingVisual();
+                    DrawingContext drawingContext = drawingVisual.RenderOpen();
+                    BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(p.Bitmap.GetHbitmap(), (IntPtr)0, new Int32Rect(0, 0, p.Bitmap.Width, p.Bitmap.Height), BitmapSizeOptions.FromWidthAndHeight(805, 750));
+                    drawingContext.DrawImage((ImageSource)sourceFromHbitmap, new Rect(0.0, 0.0, (double)805, (double)750));
+
+                    foreach (Marker marker in p.Markers)
+                    {
+                        drawingContext.DrawRectangle((System.Windows.Media.Brush)null, new System.Windows.Media.Pen((System.Windows.Media.Brush)System.Windows.Media.Brushes.Red, 2.0), new Rect((double)marker.Left, (double)marker.Top, (double)marker.Width, (double)marker.Height));
+                    }
+
+                    drawingContext.Close();
+                    RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(805, 750, 96.0, 96.0, PixelFormats.Pbgra32);
+                    renderTargetBitmap.Render((Visual)drawingVisual);
+                    this._tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                    Directory.CreateDirectory(this._tempFolder);
+                    string path = Path.Combine(this._tempFolder, string.Format("Picture-{0}.png", pictureNum++));
+                    stringList.Add(path);
+                    PngBitmapEncoder pngBitmapEncoder = new PngBitmapEncoder();
+                    pngBitmapEncoder.Frames.Add(BitmapFrame.Create((BitmapSource)renderTargetBitmap));
+                    using (Stream stream = (Stream)File.Create(path))
+                        pngBitmapEncoder.Save(stream);
+                }
             }
-            */
 
             return stringList;
         }
