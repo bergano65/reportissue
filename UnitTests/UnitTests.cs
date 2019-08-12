@@ -1,14 +1,20 @@
-﻿using System;
+﻿ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ReportIssue;
+using ReportIssueUtilities;
 using System.Data.Entity.Validation;
 
 namespace UnitTests
-{
+{  
     [TestClass]
-    public class UnitTests
+    public class UnitTest
     {
+        [TestMethod]
+        public void TestGetWorkItem()
+        {
+        }
+        
         [TestMethod]
         public void TestEditIssue()
         {

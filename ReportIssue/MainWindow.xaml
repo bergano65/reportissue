@@ -16,9 +16,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ListView SelectionChanged="_issueList_SelectionChanged" ButtonBase.Click="_issueList_Click"
+        <ListView KeyDown="Window_KeyDown" SelectionMode="Single" SelectionChanged="_issueList_SelectionChanged" ButtonBase.Click="_issueList_Click"
               Name="_issueList" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5, 5, 5, 5"
-              VerticalAlignment="Stretch" SelectionMode="Single">
+              VerticalAlignment="Stretch">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Send" Width="30">

@@ -1,6 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <issues>
   <issue>
+    <type>Windows support bug template</type>
+    <alias>Windows support bug template</alias>
+    <description>
+ Windows support bug template
+    </description>
+    <parameters>
+      <parameter name="location" alias="Location/URL" type="text" num="9"  old_field="Url"></parameter>
+      <parameter name="productName" alias="Office Product&#10;App/Service Name" type="text" num="2" old_field="Product"></parameter>
+      <parameter name="issueDescription" alias="Issue description" type="mtext" num="4"  old_field="IssueTxt"></parameter>
+      <parameter name="shortDescription" alias="Short description" type="text" num="8"></parameter>
+      <parameter name="currentTranslation" alias="Current Translation" type="mtext" num="5"  old_field="Wrong"></parameter>
+      <parameter name="suggestedTranslation" alias="Suggested Translation" type="mtext" num="6"  old_field="Right"></parameter>
+      <parameter name="language" alias="Affected Language" type="combo" num="3"  old_field="Language">
+        <value name="English" alias="English"></value>
+        <value name="Russian" alias="Russian"></value>
+        <value name="All" alias="All"></value>
+      </parameter>
+      <parameter name="severity" alias="Severity" type="text" num="13"  old_field="Severity"></parameter>
+      <parameter name="bugPath" alias="Bug Path" type="text" num="15"></parameter>
+      <parameter name="status" alias="Status" type="combo" num="14" default="Active">
+        <value name="Active" alias="Active"></value>
+        <value name="Won't fix" alias="Won't fix"></value>
+        <value name="Fixed" alias="Fixed"></value>
+      </parameter>
+    </parameters>
+    <file>
+      <server>https://microsoft.visualstudio.com</server>
+      <bugpath><![CDATA[https://microsoft.visualstudio.com/DefaultCollection/OS/_workitems/edit/{0}]]></bugpath>
+      <project>OS</project>
+      <fields>
+        <field name="title">OS: {3}: {8}</field>
+        <field name="Description">{4}</field>
+        <field name="Priority" type="int" alias="Priority">{13}</field>
+        <field name="Severity" type="int" alias="Severity">{13}</field>
+        <field name="Area" alias="Area">OS\Core\Global\Market Services\Content and Store</field>
+        <field name="issuetype" alias="Issue Type">Localization</field>
+              <field name="repro" alias="Repro Steps">
+          <![CDATA[
+Steps to reproduce:
+1. Browse to {9}
+
+Current Behavior:
+{5}
+Look screen shot attached
+
+Expected Behavior:
+{6} 
+
+Affected Product 
+{2}
+
+Language: 
+{3}
+]]></field>
+</fields>
+    </file>
+  </issue>
+  <issue>
     <type>VS doc bug template</type>
     <alias>VS doc bug template</alias>
     <description>

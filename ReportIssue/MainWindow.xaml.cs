@@ -304,6 +304,7 @@ namespace ReportIssue
                 string newValue = issue.GetType().GetProperty(name).GetValue((object)issue) as string;
                 str1 = str1.Replace("{" + str2 + "}", newValue);
             }
+
             return str1;
         }
 
@@ -323,6 +324,7 @@ namespace ReportIssue
                 int num = (int)MessageBox.Show(string.Format("Unable to find bug report description for template '{0}'", (object)issue.Template), "Issue report");
                 return (WorkItem)null;
             }
+
             XmlNode xmlNode2 = xmlNode1.SelectSingleNode("server");
             if (xmlNode2 == null)
             {
@@ -330,6 +332,7 @@ namespace ReportIssue
                 int num = (int)MessageBox.Show(string.Format("Unable to find tfs server for template '{0}'", (object)issue.Template), "Issue report");
                 return (WorkItem)null;
             }
+
             XmlNode xmlNode3 = xmlNode1.SelectSingleNode("project");
             if (xmlNode3 == null)
             {
@@ -337,12 +340,19 @@ namespace ReportIssue
                 int num = (int)MessageBox.Show(string.Format("Unable to find project for template '{0}'", (object)issue.Template), "Issue report");
                 return (WorkItem)null;
             }
+
             string innerText1 = xmlNode2.InnerText;
             string innerText2 = xmlNode3.InnerText;
             TfsTeamProjectCollection projectCollection = ReportIssueUtilities.ReportIssueUtilities.GetTfsTeamProjectCollection(innerText1);
             string title = issue.Parameter4;
+            string projectName = xmlNode3.InnerText;
+
             string description = "";
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            string area = "";
+            int severity = 3;
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
             foreach (XmlNode selectNode in xmlNode1.SelectNodes("fields/field"))
             {
                 try
@@ -354,17 +364,33 @@ namespace ReportIssue
                         if (str != null)
                             index = str;
                     }
+
                     if (selectNode.Attributes["value"] == null)
                     {
                         if (selectNode.InnerText.Length <= 0)
                             continue;
                     }
+
+                    string type = "";
+                    if (selectNode.Attributes["type"] != null)
+                    {
+                        type = selectNode.Attributes["type"].Value;
+                    }
+
                     string str1 = selectNode.Attributes["value"] == null ? selectNode.InnerText : selectNode.Attributes["value"].Value;
+
                     string fieldValue = this.GetFieldValue(issue, str1);
+
                     if (index == "title")
                         title = fieldValue;
                     else
+                    {
                         parameters[index] = fieldValue;
+                        if (type == "int")
+                        {
+                            parameters[index] = (Int32.Parse(fieldValue));
+                        }                    
+                    }
                 }
                 catch (System.Exception ex)
                 {
@@ -372,23 +398,66 @@ namespace ReportIssue
             }
             try
             {
-                WorkItem tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.CreateTfsWorkItem(projectCollection, innerText2, title, (string)null, (string)null, description, "Bug", parameters);
+                // check item already exist
+                WorkItem tfsWorkItem = null; 
+                int id = 0;
+
+                if (Int32.TryParse(issue.BugPath, out id))
+                {
+                    tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.GetTfsWorkItem(projectCollection, projectName, id);
+                }
+                
+                foreach (Field f in tfsWorkItem.Fields)
+                {
+                    if (f.Value != null && f.Value.ToString().Contains("rows"))
+                    {
+
+                    }
+                }
+
+                MessageBoxResult result = MessageBoxResult.No;
+                if (tfsWorkItem != null)
+                {
+                    result = MessageBox.Show("Bug already exist. Yes update parameters, No create another bug or Cancel", "Issu= report", MessageBoxButton.YesNoCancel);
+                    if (result == MessageBoxResult.Cancel)
+                    {
+                        return (WorkItem)null;
+                    }
+                }
+
+                if (result == MessageBoxResult.No)
+                {
+                    tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.CreateTfsWorkItem(projectCollection, innerText2, title, (string)null, (string)null, description, "Bug", parameters);
+                }
+
+                if (parameters.ContainsKey("Area"))
+                {
+                    area = parameters["Area"] as String;
+                }
+
                 XmlNode xmlNode4 = xmlNode1.SelectSingleNode("bugpath");
-                if (xmlNode1 == null)
+                if (xmlNode4 == null)
                 {
                     this._tc.TrackEvent(string.Format("Unable to find bug path description for template '{0}'", (object)issue.Template), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                     int num = (int)MessageBox.Show(string.Format("Unable to find bug path description for template '{0}'", (object)issue.Template), "Issue report");
                     return (WorkItem)null;
                 }
+
                 List<string> pictures = this.GetPictures((IEnumerable<Issue>)new List<Issue>()
-        {
-          issue
-        });
-                Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment attachment = new Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment(pictures[0], "Issue Screenshot");
-                tfsWorkItem.Attachments.Add(attachment);
+                {
+                  issue
+                });
+
+                foreach (string p in pictures)
+                {
+                    Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment attachment = new Microsoft.TeamFoundation.WorkItemTracking.Client.Attachment(p, string.Format("Issue Screenshot {0}", pictures.IndexOf(p) + 1));
+                    tfsWorkItem.Attachments.Add(attachment);
+                }
+
+                tfsWorkItem.AreaPath = area;
                 tfsWorkItem.Save();
-                issue.BugPath = string.Format(xmlNode4.InnerText, (object)tfsWorkItem.Id);
-                issue.Parameter15 = issue.BugPath;
+//                issue.BugPath = string.Format(xmlNode4.InnerText, (object)tfsWorkItem.Id);
+                issue.BugPath = issue.Parameter15 = tfsWorkItem.Id.ToString();
                 this.DeletePictures(pictures);
                 return tfsWorkItem;
             }
@@ -408,45 +477,46 @@ namespace ReportIssue
                 this._tc.TrackEvent("No issues collected for bug reporting", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 int num = (int)MessageBox.Show("No issues collected for bug reporting", "Issue report");
                 this._tc.StopOperation<RequestTelemetry>(operation);
-            }
+            } 
             else
             {
                 this._tc.TrackEvent("Create Issue Bug", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 Issue issue = this._issues[this._issueList.SelectedIndex];
                 bool flag = true;
+
+                this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0}", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                if (this.CreateBug(issue) != null)
+                {
+                    this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0}", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                }
+                else
+                { 
+                    this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0} failed", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                    flag = false;
+                }
+
                 try
                 {
-                    Uri uri = new Uri(issue.Parameter15);
+                    this._data.SaveChanges();
                 }
                 catch (System.Exception ex)
                 {
+                    this._tc.TrackEvent("Save database failed", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                    MessageBox.Show("Can't save database", "Issue report");
                     flag = false;
                 }
-                if (flag && MessageBox.Show("Bug already exist. Create another?", "Issue report", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                finally
                 {
-                    this._tc.TrackEvent("Create Issue Bug skipped, bug already exist", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+                  this._tc.StopOperation<RequestTelemetry>(operation);
+                }
+
+                if (flag)
+                {
+                    MessageBox.Show("Bug created", "Issue report");
                 }
                 else
                 {
-                    this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0}", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                    if (this.CreateBug(issue) != null)
-                        this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0}", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                    else
-                        this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0} failed", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                    try
-                    {
-                        this._data.SaveChanges();
-                        int num = (int)MessageBox.Show("Bug created", "Issue report");
-                    }
-                    catch (System.Exception ex)
-                    {
-                        this._tc.TrackEvent("Save database failed", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                        int num = (int)MessageBox.Show("Can't save database", "Issue report");
-                    }
-                    finally
-                    {
-                        this._tc.StopOperation<RequestTelemetry>(operation);
-                    }
+                    MessageBox.Show("Bug create failed", "Issue report");
                 }
             }
         }
@@ -494,7 +564,7 @@ namespace ReportIssue
                         // ISSUE: reference to a compiler-generated method
                         mailItem.Display((object)false);
                         // ISSUE: reference to a compiler-generated method
-                        mailItem.Send();
+//                        mailItem.Send();
                         this.DeletePictures(pictures);
                         int num = (int)MessageBox.Show("Report sent successfully");
                     }
@@ -530,6 +600,7 @@ namespace ReportIssue
             for (int index = 0; index < issues.ToList<Issue>().Count; ++index)
            {
                 Issue issue = issues.ToList<Issue>()[index];
+                issue.Open();
 
                 foreach (Picture p in issue.Pictures)
                 {
@@ -782,8 +853,12 @@ namespace ReportIssue
         private void _selectAllIssueBtn_Click(object sender, RoutedEventArgs e)
         {
             this._tc.TrackEvent("Select All Issues", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+
             foreach (Issue issue in (Collection<Issue>)this._issues)
-                issue.Selected = true;
+            {
+                issue.Selected = !issue.Selected;
+            }
+    
             CollectionViewSource.GetDefaultView((object)this._issueList.ItemsSource).Refresh();
         }
 
@@ -853,6 +928,16 @@ namespace ReportIssue
             else if (e.Key == Key.Return)
             {
                 this.editIssueButton_Click((object)null, (RoutedEventArgs)null);
+            }
+            else if (e.Key == Key.Space)
+            {
+                IEnumerable<Issue> issues = this._issues.Where<Issue>((Func<Issue, bool>)(i => i.Selected));
+                foreach (Issue i in issues)
+                {
+                    i.Selected = !i.Selected;
+                }
+
+                this.RedrawList();
             }
             else
             {

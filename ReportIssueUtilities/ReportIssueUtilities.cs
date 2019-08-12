@@ -13,6 +13,20 @@ namespace ReportIssueUtilities
 {
     public static class ReportIssueUtilities
     {
+
+        public static WorkItem GetTfsWorkItem(
+          TfsTeamProjectCollection collection,
+            string projectName,
+            int workItemId)
+        {
+            collection.EnsureAuthenticated();
+
+            WorkItemStore workitemstore = collection.GetService<WorkItemStore>();
+            WorkItem item = workitemstore.GetWorkItem(workItemId);
+
+            return item;
+        }
+
         public static WorkItem CreateTfsWorkItem(
           TfsTeamProjectCollection collection,
           string projectName,
@@ -21,7 +35,7 @@ namespace ReportIssueUtilities
           string iteration,
           string description,
           string itemType,
-          Dictionary<string, string> parameters)
+          Dictionary<string, object> parameters)
         {
             WorkItem workItem = new WorkItem(collection.GetService<WorkItemStore>().Projects[projectName].WorkItemTypes[itemType]);
             workItem.Title = title;
