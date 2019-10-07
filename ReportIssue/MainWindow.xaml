@@ -34,7 +34,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock>
-                  <Hyperlink ToolTip="Click to  browse to issue location in documentation" NavigateUri="{Binding Parameter9}">
+                  <Hyperlink Click="_issueHyperlink_Click" ToolTip="Click to  browse to issue location in documentation" NavigateUri="{Binding Parameter9}">
                     <Run Text="{Binding Parameter9}"/>
                   </Hyperlink>
                                 </TextBlock>

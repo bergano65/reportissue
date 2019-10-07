@@ -21,5 +21,6 @@ namespace ReportIssue
         public string Right { get; set; }
         public string Submitted { get; set; }
         public string Fixed { get; set; }
+        public string Status { get; set; }
     }
 }

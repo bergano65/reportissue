@@ -21,6 +21,7 @@ namespace ReportIssue
             this.Right = "";
             this.Submitted = "Any";
             this.Fixed = "Any";
+            this.Status = "Any";
         }
     }
 }

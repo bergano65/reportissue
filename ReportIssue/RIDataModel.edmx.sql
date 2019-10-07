@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 08/05/2019 05:27:39
--- Generated from EDMX file: C:\projects\ReportIssue\ReportIssue\RIDataModel.edmx
+-- Date Created: 10/06/2019 00:33:10
+-- Generated from EDMX file: C:\Users\evadm\Source\Repos\reportissue\ReportIssue\RIDataModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -25,17 +25,7 @@ GO
 IF OBJECT_ID(N'[dbo].[Filters]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Filters];
 GO
-IF OBJECT_ID(N'[dbo].[Issues]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Issues];
-GO
-IF OBJECT_ID(N'[dbo].[Pictures]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Pictures];
-GO
-IF OBJECT_ID(N'[dbo].[Markers]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Markers];
-GO
 
--- --------------------------------------------------
 -- Creating all tables
 -- --------------------------------------------------
 
@@ -47,70 +37,10 @@ CREATE TABLE [dbo].[Filters] (
     [Wrong] nvarchar(max)  NOT NULL,
     [Right] nvarchar(max)  NOT NULL,
     [Submitted] nvarchar(max)  NOT NULL,
-    [Fixed] nvarchar(max)  NOT NULL
+    [Fixed] nvarchar(max)  NOT NULL,
+    [Status] nvarchar(max)  NOT NULL
 );
-GO
 
--- Creating table 'Issues'
-CREATE TABLE [dbo].[Issues] (
-    [ID] nchar(256)  NOT NULL,
-    [Template] nvarchar(max)  NULL,
-    [UpdateTime] datetime  NULL,
-    [Parameter1] nvarchar(max)  NOT NULL,
-    [Parameter2] nvarchar(max)  NOT NULL,
-    [Parameter3] nvarchar(max)  NULL,
-    [Parameter4] nvarchar(max)  NULL,
-    [Parameter5] nvarchar(max)  NULL,
-    [Parameter6] nvarchar(max)  NULL,
-    [Parameter7] nvarchar(max)  NULL,
-    [Parameter8] nvarchar(max)  NOT NULL,
-    [Parameter10] nvarchar(max)  NOT NULL,
-    [Parameter9] nvarchar(max)  NOT NULL,
-    [Parameter11] nvarchar(max)  NOT NULL,
-    [Parameter12] nvarchar(max)  NOT NULL,
-    [Parameter13] nvarchar(max)  NOT NULL,
-    [Parameter14] nvarchar(max)  NOT NULL,
-    [Parameter15] nvarchar(max)  NOT NULL,
-    [Parameter16] nvarchar(max)  NOT NULL,
-    [Parameter17] nvarchar(max)  NOT NULL,
-    [Parameter18] nvarchar(max)  NOT NULL,
-    [Parameter19] nvarchar(max)  NOT NULL,
-    [Parameter20] nvarchar(max)  NOT NULL,
-    [Url] nvarchar(max)  NOT NULL,
-    [BugPath] nvarchar(max)  NOT NULL,
-    [Fixed] bit  NOT NULL,
-    [Submitted] bit  NOT NULL,
-    [Product] nvarchar(max)  NOT NULL,
-    [Reason] nvarchar(max)  NOT NULL,
-    [Wrong] nvarchar(max)  NOT NULL,
-    [WhereFound] nvarchar(max)  NOT NULL,
-    [Right] nvarchar(max)  NOT NULL,
-    [English] nvarchar(max)  NOT NULL,
-    [IssueTxt] nvarchar(max)  NOT NULL,
-    [PictureString] nvarchar(max)  NOT NULL
-);
-GO
-
--- Creating table 'Pictures'
-CREATE TABLE [dbo].[Pictures] (
-    [ID] nvarchar(256)  NOT NULL,
-    [Bytes] varbinary(max)  NOT NULL,
-    [MarkerString] nvarchar(max)  NOT NULL,
-    [Name] nvarchar(max)  NOT NULL
-);
-GO
-
--- Creating table 'Markers'
-CREATE TABLE [dbo].[Markers] (
-    [Id] nvarchar(256)  NOT NULL,
-    [Top] int  NOT NULL,
-    [Left] int  NOT NULL,
-    [Width] int  NOT NULL,
-    [Height] int  NOT NULL
-);
-GO
-
--- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
 
@@ -121,22 +51,6 @@ ADD CONSTRAINT [PK_Filters]
 GO
 
 -- Creating primary key on [ID] in table 'Issues'
-ALTER TABLE [dbo].[Issues]
-ADD CONSTRAINT [PK_Issues]
-    PRIMARY KEY CLUSTERED ([ID] ASC);
-GO
-
--- Creating primary key on [ID] in table 'Pictures'
-ALTER TABLE [dbo].[Pictures]
-ADD CONSTRAINT [PK_Pictures]
-    PRIMARY KEY CLUSTERED ([ID] ASC);
-GO
-
--- Creating primary key on [Id] in table 'Markers'
-ALTER TABLE [dbo].[Markers]
-ADD CONSTRAINT [PK_Markers]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
 
 -- --------------------------------------------------
 -- Creating all FOREIGN KEY constraints

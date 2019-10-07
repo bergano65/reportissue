@@ -25,6 +25,16 @@ namespace ReportIssue
             this.InitializeComponent();
             ((ListBoxItem)this._submittedComboBox.FindName(this.Filter.Submitted)).IsSelected = true;
             ((ListBoxItem)this._submittedComboBox.FindName(this.Filter.Fixed + "2")).IsSelected = true;
+
+            if (this.Filter.Status == "Any")
+            {
+                ((ListBoxItem)this._statComboBox.FindName("Any3")).IsSelected = true;
+            }
+            else
+            {
+                ((ListBoxItem)this._statComboBox.FindName(this.Filter.Status)).IsSelected = true;
+            }
+
             this._productTextBox.Text = this.Filter.Product;
             this._issueTextBox.Text = this.Filter.Issue;
             this._wrongTextBox.Text = this.Filter.Wrong;
@@ -36,6 +46,7 @@ namespace ReportIssue
             this._tc.TrackEvent("Filter Edit Submit", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
             this.Filter.Submitted = (string)(this._submittedComboBox.SelectedValue as ComboBoxItem).Content;
             this.Filter.Fixed = (string)(this._fixedComboBox.SelectedValue as ComboBoxItem).Content;
+            this.Filter.Status = (string)(this._statComboBox.SelectedValue as ComboBoxItem).Content;
             this.Filter.Product = this._productTextBox.Text;
             this.Filter.Issue = this._issueTextBox.Text;
             this.Filter.Wrong = this._wrongTextBox.Text;

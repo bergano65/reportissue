@@ -724,6 +724,10 @@ namespace ReportIssue
         {
             IEnumerable<Issue> source = issues;
             this._tc.TrackEvent("Get Filtered Issues", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+
+            if (filter.Status != "Any")
+                source = source.Where<Issue>((Func<Issue, bool>)(i => i.Parameter14 == filter.Status));
+
             if (filter.Submitted != "Any")
                 source = !(filter.Submitted == "Yes") ? source.Where<Issue>((Func<Issue, bool>)(i => !i.Submitted)) : source.Where<Issue>((Func<Issue, bool>)(i => i.Submitted));
             if (filter.Fixed != "Any")
@@ -973,6 +977,12 @@ namespace ReportIssue
                 return;
             }
             Process.Start(dataContext.Parameter15);
+        }
+
+        private void _issueHyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Issue dataContext = (e.Source as System.Windows.Documents.Hyperlink).DataContext as Issue;
+            Process.Start(dataContext.Parameter9);
         }
     }
 }
