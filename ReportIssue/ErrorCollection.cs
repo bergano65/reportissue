@@ -12,16 +12,9 @@ namespace ReportIssue
     using System;
     using System.Collections.Generic;
     
-    public partial class Filter
+    public partial class ErrorCollection
     {
-        public string ID { get; set; }
-        public string Issue { get; set; }
-        public string Product { get; set; }
-        public string Wrong { get; set; }
-        public string Right { get; set; }
-        public string Submitted { get; set; }
-        public string Fixed { get; set; }
-        public string Status { get; set; }
-        public string Way { get; set; }
+        public string Id { get; set; }
+        public byte[] Error { get; set; }
     }
 }

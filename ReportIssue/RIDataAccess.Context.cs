@@ -29,5 +29,6 @@ namespace ReportIssue
         public virtual DbSet<Issue> Issues { get; set; }
         public virtual DbSet<Picture> Pictures { get; set; }
         public virtual DbSet<Marker> Markers { get; set; }
+        public virtual DbSet<ErrorCollection> ErrorCollections { get; set; }
     }
 }

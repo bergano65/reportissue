@@ -35,6 +35,16 @@ namespace ReportIssue
                 ((ListBoxItem)this._statComboBox.FindName(this.Filter.Status)).IsSelected = true;
             }
 
+            if (this.Filter.Way == "Any")
+            { 
+                ((ListBoxItem)this._wayComboBox.FindName("Any4")).IsSelected = true;
+            }
+            else
+            {
+                ((ListBoxItem)this._wayComboBox.FindName(this.Filter.Way)).IsSelected = true;
+            }
+
+
             this._productTextBox.Text = this.Filter.Product;
             this._issueTextBox.Text = this.Filter.Issue;
             this._wrongTextBox.Text = this.Filter.Wrong;
@@ -47,6 +57,7 @@ namespace ReportIssue
             this.Filter.Submitted = (string)(this._submittedComboBox.SelectedValue as ComboBoxItem).Content;
             this.Filter.Fixed = (string)(this._fixedComboBox.SelectedValue as ComboBoxItem).Content;
             this.Filter.Status = (string)(this._statComboBox.SelectedValue as ComboBoxItem).Content;
+            this.Filter.Way = (string)(this._wayComboBox.SelectedValue as ComboBoxItem).Content;
             this.Filter.Product = this._productTextBox.Text;
             this.Filter.Issue = this._issueTextBox.Text;
             this.Filter.Wrong = this._wrongTextBox.Text;

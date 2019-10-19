@@ -10,6 +10,7 @@
     <EntitySet Name="Issues" EntityType="RIDataModel.Store.Issues" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Pictures" EntityType="RIDataModel.Store.Pictures" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Markers" EntityType="RIDataModel.Store.Markers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ErrorCollections" EntityType="RIDataModel.Store.ErrorCollections" store:Type="Tables" Schema="dbo" />
   </EntityContainer>
   <EntityType Name="Filters">
     <Key>
@@ -23,6 +24,7 @@
     <Property Name="Submitted" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Fixed" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Way" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="Issues">
     <Key>
@@ -83,6 +85,13 @@
     <Property Name="Width" Type="int" Nullable="false" />
     <Property Name="Height" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="ErrorCollections">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nchar" Nullable="false" MaxLength="256" />
+    <Property Name="Error" Type="varbinary(max)" Nullable="false" />
+  </EntityType>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -92,6 +101,7 @@
           <EntitySet Name="Issues" EntityType="RIDataModel.Issue" />
           <EntitySet Name="Pictures" EntityType="RIDataModel.Picture" />
           <EntitySet Name="Markers" EntityType="RIDataModel.Marker" />
+          <EntitySet Name="ErrorCollections" EntityType="RIDataModel.ErrorCollection" />
         </EntityContainer>
         <EntityType Name="Filter">
           <Key>
@@ -105,6 +115,7 @@
           <Property Name="Submitted" Type="String" Nullable="false" />
           <Property Name="Fixed" Type="String" Nullable="false" />
           <Property Name="Status" Type="String" Nullable="false" />
+          <Property Name="Way" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="Issue">
           <Key>
@@ -165,6 +176,13 @@
           <Property Name="Width" Type="Int32" Nullable="false" />
           <Property Name="Height" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="ErrorCollection">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="None" MaxLength="256" FixedLength="true" />
+          <Property Name="Error" Type="Binary" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -182,6 +200,7 @@
           <ScalarProperty Name="Submitted" ColumnName="Submitted" />
           <ScalarProperty Name="Fixed" ColumnName="Fixed" />
           <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Way" ColumnName="Way" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -244,6 +263,14 @@
           <ScalarProperty Name="Left" ColumnName="Left" />
           <ScalarProperty Name="Width" ColumnName="Width" />
           <ScalarProperty Name="Height" ColumnName="Height" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ErrorCollections">
+      <EntityTypeMapping TypeName="IsTypeOf(RIDataModel.ErrorCollection)">
+        <MappingFragment StoreEntitySet="ErrorCollections">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Error" ColumnName="Error" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

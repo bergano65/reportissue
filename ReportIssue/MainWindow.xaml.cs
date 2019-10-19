@@ -36,6 +36,8 @@ using Path = System.IO.Path;
 
 using System.Data.Entity.Migrations;
 
+using ReportIssueUtilities;
+
 namespace ReportIssue
 {
     /// <summary>
@@ -63,8 +65,7 @@ namespace ReportIssue
         public static extern bool DeleteObject(IntPtr hObject);
 
         public MainWindow()
-        {
-
+        {        
             this._tc = new TelemetryClient();
             this._tc.Context.User.AuthenticatedUserId = "eviten@microsoft.com";
             this._tc.Context.Session.Id = Guid.NewGuid().ToString();

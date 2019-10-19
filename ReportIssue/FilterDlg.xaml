@@ -22,6 +22,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -56,7 +57,13 @@
             <ComboBoxItem Name="Item">Item</ComboBoxItem>
             <ComboBoxItem Name="Fixed">Fixed</ComboBoxItem>
         </ComboBox>
-        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right"
+        <TextBlock Grid.Row="7" Grid.Column="0" Margin="5, 5, 5, 5">Way</TextBlock>
+        <ComboBox Name="_wayComboBox" Grid.Row="7" Grid.Column="1" Margin="5, 5, 5, 5">
+            <ComboBoxItem Name="Any4">Any</ComboBoxItem>
+            <ComboBoxItem Name="Human">Human</ComboBoxItem>
+            <ComboBoxItem Name="Machine">Semi</ComboBoxItem>
+        </ComboBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Right"
                 Margin="0, 0, 0, 0">
        <Button Click="_okBtn_Click" Name="_okBtn" IsDefault="true" Margin="5, 5, 5, 5" Height="20" Width="45">Ok</Button>
             <Button Click="_cancelBtn_Click" Name="_cancelBtn" IsCancel="true" Margin="5, 5, 5, 5" Height="20"

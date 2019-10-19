@@ -1,0 +1,3 @@
+﻿-  issue saves without picture but doesn't show
+
+-

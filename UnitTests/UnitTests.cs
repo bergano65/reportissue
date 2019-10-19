@@ -14,7 +14,34 @@ namespace UnitTests
         public void TestGetWorkItem()
         {
         }
-        
+
+        [TestMethod]
+        public void TestEncodeError()
+        {
+            ObservableCollection<Error> collection = new ObservableCollection<Error>();
+
+            Error e1 = new Error();
+            e1.C1 = "C1";
+            e1.C2 = "C2";
+            e1.C3 = "C3";
+            e1.C4 = "C4";
+            e1.C5 = "C5";
+
+
+            Error e2 = new Error();
+            e2.C1 = "C1";
+            e2.C2 = "C2";
+            e2.C3 = "C3";
+            e2.C4 = "C4";
+            e2.C5 = "C5";
+
+            collection.Add(e1);
+            collection.Add(e2);
+
+            string errors = ReportIssueUtilities.EncodeErrors(errors);
+        }
+
+
         [TestMethod]
         public void TestEditIssue()
         {

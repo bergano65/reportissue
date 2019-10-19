@@ -5,6 +5,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
@@ -19,6 +20,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+
+using ReportIssueUtilities;
 
 namespace ReportIssue
 {
@@ -62,6 +65,9 @@ namespace ReportIssue
             this._timer.Tick += _timer_Tick;
             this._timer.Start();
             this.CurrentIssue = issue;
+            
+           _errorGrid.ItemsSource = new ObservableCollection<Error>();
+
             if (issue != null)
             {
                 ShowIssue();
@@ -96,6 +102,8 @@ namespace ReportIssue
 
 //            this._pictureList.SelectedIndex = 0;
             this._pictureListView.SelectedIndex = 0;
+
+            _errorGrid.ItemsSource = ReportIssueUtilities.ReportIssueUtilities.DecodeErrors(this.CurrentIssue.Wrong);
         }
 
         private void NewIssue()
@@ -108,7 +116,6 @@ namespace ReportIssue
 
         private void addPictureButton_Click(object sender, RoutedEventArgs e)
         {
-            // save currento picture if exists
             if (this._currentPicture != null)
           {
                 if (!SavePicture(this._currentPicture))
@@ -490,6 +497,8 @@ namespace ReportIssue
 
             this.PutCurrentIssueProperties();
             RIDataModelContainer d = new RIDataModelContainer();
+
+            this.CurrentIssue.Wrong = ReportIssueUtilities.ReportIssueUtilities.EncodeErrors(_errorGrid.ItemsSource as ObservableCollection<Error>);
 
             this.CurrentIssue.Pictures.Clear();
             for (int i = 0; i < this._pictureListView.Items.Count; i++)

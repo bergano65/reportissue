@@ -22,6 +22,7 @@ namespace ReportIssue
             this.Submitted = "Any";
             this.Fixed = "Any";
             this.Status = "Any";
+            this.Way = "Human";
         }
     }
 }

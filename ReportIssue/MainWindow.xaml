@@ -55,8 +55,7 @@
                     </GridViewColumn>
                     <GridViewColumn Header="Wrong" Width="140" DisplayMemberBinding="{Binding Parameter5}"/>
                     <GridViewColumn Header="Right" Width="140" DisplayMemberBinding="{Binding Parameter6}"/>
-                    <GridViewColumn Header="Submitted" Width="140" DisplayMemberBinding="{Binding Submitted}"/>
-                    <GridViewColumn Header="Fixed" Width="140" DisplayMemberBinding="{Binding Fixed}"/>
+                    <GridViewColumn Header="Way" Width="140" DisplayMemberBinding="{Binding Parameter16}"/>
                 </GridView>
             </ListView.View>
         </ListView>

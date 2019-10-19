@@ -151,7 +151,6 @@ namespace ReportIssue
 
             this._isIssueEdited = true;
         }
-
         private void ShowIssue()
         {
             this._tc.TrackEvent("Show Issue", (IDictionary<string, string>)null, (IDictionary<string, double>)null);

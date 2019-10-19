@@ -204,6 +204,18 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Spire.License, Version=1.3.7.46, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.Spreadsheet.3.9.2\lib\net46\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf, Version=5.8.17.18046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.Spreadsheet.3.9.2\lib\net46\Spire.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Spreadsheet, Version=3.9.2.8046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.Spreadsheet.3.9.2\lib\net46\Spire.Spreadsheet.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.XLS, Version=9.9.1.18046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.Spreadsheet.3.9.2\lib\net46\Spire.XLS.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -258,6 +270,9 @@
     </Compile>
     <Compile Include="EditIssueDlg4.xaml.cs">
       <DependentUpon>EditIssueDlg4.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorCollection.cs">
+      <DependentUpon>RIDataAccess.tt</DependentUpon>
     </Compile>
     <Compile Include="Filter.cs">
       <DependentUpon>RIDataAccess.tt</DependentUpon>
@@ -385,6 +400,7 @@
     <Content Include="IssueType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Notes.txt" />
     <Content Include="RIDataAccess.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RIDataAccess.Context.cs</LastGenOutput>
