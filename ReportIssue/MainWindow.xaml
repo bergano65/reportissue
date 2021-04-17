@@ -42,18 +42,17 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Product" Width="140" DisplayMemberBinding="{Binding Parameter2}"/>
-                    <GridViewColumn Header="IssueTxt" Width="140">
+                    <GridViewColumn Header="Wrong" Width="140">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock>
-                  <Hyperlink ToolTip="Click to browse to issue bug location" NavigateUri="{Binding Parameter15}">
-                    <Run Text="{Binding Parameter4}"/>
+                  <Hyperlink ToolTip="Click to browse to issue bug location" Click="bugPathHyperlink_Click">
+                    <Run Text="{Binding Parameter5}"/>
                   </Hyperlink>
                                 </TextBlock>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Wrong" Width="140" DisplayMemberBinding="{Binding Parameter5}"/>
                     <GridViewColumn Header="Right" Width="140" DisplayMemberBinding="{Binding Parameter6}"/>
                     <GridViewColumn Header="Way" Width="140" DisplayMemberBinding="{Binding Parameter16}"/>
                 </GridView>

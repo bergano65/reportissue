@@ -191,6 +191,7 @@ namespace ReportIssue
                     this._currentIssue = editIssueDlg2.CurrentIssue;
                     this._data.Issues.Add(this._currentIssue);
                     this._data.SaveChanges();
+                    this.RedrawList();
                     this._tc.TrackEvent("New Issue created", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 }
                 else
@@ -342,6 +343,7 @@ namespace ReportIssue
                 return (WorkItem)null;
             }
 
+
             string innerText1 = xmlNode2.InnerText;
             string innerText2 = xmlNode3.InnerText;
             TfsTeamProjectCollection projectCollection = ReportIssueUtilities.ReportIssueUtilities.GetTfsTeamProjectCollection(innerText1);
@@ -408,6 +410,7 @@ namespace ReportIssue
                     tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.GetTfsWorkItem(projectCollection, projectName, id);
                 }
                 
+/*
                 foreach (Field f in tfsWorkItem.Fields)
                 {
                     if (f.Value != null && f.Value.ToString().Contains("rows"))
@@ -415,6 +418,7 @@ namespace ReportIssue
 
                     }
                 }
+*/
 
                 MessageBoxResult result = MessageBoxResult.No;
                 if (tfsWorkItem != null)
@@ -464,9 +468,10 @@ namespace ReportIssue
             }
             catch (System.Exception ex)
             {
-                this._tc.TrackEvent(string.Format("Unable to find bug report description for template '{0}'", (object)issue.Template), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                int num = (int)MessageBox.Show(string.Format("Unable to find bug report description for template '{0}'", (object)issue.Template), "Issue report");
-                return (WorkItem)null;
+                string msg = string.Format("Bug creation error '{0}'", ex.Message);
+                this._tc.TrackEvent(msg);
+                MessageBox.Show(msg, "Issue report");
+                return null;
             }
         }
 
@@ -967,17 +972,56 @@ namespace ReportIssue
 
         private void bugPathHyperlink_Click(object sender, RoutedEventArgs e)
         {
-            Issue dataContext = (e.Source as System.Windows.Documents.Hyperlink).DataContext as Issue;
+            Issue issue = (e.Source as System.Windows.Documents.Hyperlink).DataContext as Issue;
+            
+            // find bug location
+            XmlNode issueTemplate = this.GetIssueTemplate(issue.Template);
+            if (issueTemplate == null)
+            {
+                string msg = string.Format("Unable to find template '{0}'", issue.Template);
+                this._tc.TrackEvent(msg);
+                MessageBox.Show(msg, "Issue report");
+                return;
+            }
+
+            XmlNode xmlNode1 = issueTemplate.SelectSingleNode("file");
+            if (xmlNode1 == null)
+            {
+                string msg = string.Format("Unable to find template '{0}' bug description", issue.Template);
+                this._tc.TrackEvent(msg);
+                MessageBox.Show(msg, "Issue report");
+                return;
+            }
+
+            XmlNode xmlNode3 = xmlNode1.SelectSingleNode("bugpath");
+            if (xmlNode3 == null)
+            {
+                string msg = string.Format("Unable to find template '{0}' bug path", issue.Template);
+                this._tc.TrackEvent(msg);
+                MessageBox.Show(msg, "Issue report");
+                return;
+            }
+
             try
             {
-                Uri uri = new Uri(dataContext.Parameter15);
+                string bugpath = xmlNode3.InnerText;
+
+                // check ID for validity
+                Int32 id;
+                if (!Int32.TryParse(issue.Parameter15, out id))
+                {
+                    MessageBox.Show("No issue  related bug created", "Issue report");
+                    return;
+                }
+
+                Uri uri = new Uri(string.Format(bugpath, issue.Parameter15));
+                Process.Start(uri.ToString());
             }
             catch (System.Exception ex)
             {
-                int num = (int)MessageBox.Show("No issue  related bug created", "Issue report");
+                MessageBox.Show("No issue  related bug created", "Issue report");
                 return;
             }
-            Process.Start(dataContext.Parameter15);
         }
 
         private void _issueHyperlink_Click(object sender, RoutedEventArgs e)
