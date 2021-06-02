@@ -70,11 +70,16 @@ namespace ReportIssue
             foreach (string id in ids)
             {
                 Picture p = d.Pictures.Find(id);
-                p.Open();
                 if (p != null)
                 {
                     this.Pictures.Add(p);
                 }
+                else
+                {
+                    continue;
+                }
+
+                p.Open();
             }
 
         }

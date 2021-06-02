@@ -196,7 +196,7 @@ namespace ReportIssueUtilities
         {
             WorkItem workItem = new WorkItem(collection.GetService<WorkItemStore>().Projects[projectName].WorkItemTypes[itemType]);
             workItem.Title = title;
-            workItem.Description = description;
+             workItem.Description = description;
             foreach (string key in parameters.Keys)
             {
                 if (workItem.Fields.Contains(key))

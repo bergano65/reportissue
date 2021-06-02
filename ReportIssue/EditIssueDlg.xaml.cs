@@ -471,7 +471,6 @@ namespace ReportIssue
             if (!this.SaveIssue())
                 return;
             this.Saved = true;
-            DialogResult = true;
             Close();
         }
 

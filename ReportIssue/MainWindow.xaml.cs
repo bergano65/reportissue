@@ -74,7 +74,14 @@ namespace ReportIssue
             this._data = new RIDataModelContainer();
             this._issues = new ObservableCollection<Issue>(this._data.Issues.ToList<Issue>());
             this._cfgDoc = new XmlDocument();
-            this._cfgDoc.Load(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), "IssueType.xml"));
+            string docPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), "IssueType.xml");
+            Uri uri = new Uri(docPath);
+
+            XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+            xmlReaderSettings.IgnoreWhitespace = false;
+
+            XmlReader reader = XmlReader.Create(uri.ToString(), xmlReaderSettings);
+            this._cfgDoc.Load(reader);
 
             if (!this.CheckTemplates())
             {
@@ -235,7 +242,7 @@ namespace ReportIssue
                 this._deleteIssueBtn.IsEnabled = false;
             }
         }
-
+         
         private string GetReportMail(IEnumerable<Issue> issues, ref int pictureCount)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -343,12 +350,16 @@ namespace ReportIssue
                 return (WorkItem)null;
             }
 
-
+            XmlNode issueTypeNode = xmlNode1.SelectSingleNode("item_type");
+           
             string innerText1 = xmlNode2.InnerText;
             string innerText2 = xmlNode3.InnerText;
             TfsTeamProjectCollection projectCollection = ReportIssueUtilities.ReportIssueUtilities.GetTfsTeamProjectCollection(innerText1);
             string title = issue.Parameter4;
+
             string projectName = xmlNode3.InnerText;
+           
+            string issueType = issueTypeNode != null ? issueTypeNode.InnerText : "Bug";
 
             string description = "";
             string area = "";
@@ -405,13 +416,13 @@ namespace ReportIssue
                 WorkItem tfsWorkItem = null; 
                 int id = 0;
 
-                if (Int32.TryParse(issue.BugPath, out id))
+                if (Int32.TryParse(issue.Parameter15, out id))
                 {
                     tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.GetTfsWorkItem(projectCollection, projectName, id);
                 }
-                
-/*
-                foreach (Field f in tfsWorkItem.Fields)
+    
+   /*         
+              foreach (Field f in tfsWorkItem.Fields)
                 {
                     if (f.Value != null && f.Value.ToString().Contains("rows"))
                     {
@@ -432,7 +443,7 @@ namespace ReportIssue
 
                 if (result == MessageBoxResult.No)
                 {
-                    tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.CreateTfsWorkItem(projectCollection, innerText2, title, (string)null, (string)null, description, "Bug", parameters);
+                    tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.CreateTfsWorkItem(projectCollection, innerText2, title, (string)null, (string)null, description, issueType, parameters);
                 }
 
                 if (parameters.ContainsKey("Area"))
@@ -1019,7 +1030,7 @@ namespace ReportIssue
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show("No issue  related bug created", "Issue report");
+                MessageBox.Show(ex.Message, "Issue report");
                 return;
             }
         }

@@ -1,6 +1,140 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <issues>
+  <issue>
+    <type>Azure one template</type>
+    <alias>Azure one template</alias>
+    <description>
+      Azure one template
+    </description>
+     <parameters>
+       <parameter name="bugTitle" alias="Bug title" type="text" num="8"></parameter>
+       <parameter name="location" alias="Page URL for which you are providing the feedback" type="text" num="9"></parameter>
+      <parameter name="current" alias="Current" type="mtext" num="5"  old_field="Wrong"></parameter>
+      <parameter name="suggested" alias="Expected" type="mtext" num="6" ></parameter>
+      <parameter namee="explanation" alias="Explanation" type="text" num="11"></parameter>
+      <parameter name="productName" alias="Office Product&#10;App/Service Name" type="text" num="2"/>
+      <parameter name="severity" alias="Severity" type="text" num="13"  old_field="Severity"></parameter>
+      <parameter name="bugPath" alias="Bug Path" type="text" num="15"></parameter>
+      <parameter name="status" alias="Status" type="combo" num="14" default="Active">
+        <value name="Active" alias="Active"></value>
+        <value name="Won't fix" alias="Won't fix"></value>
+        <value name="Reported" alias="Reported"></value>
+        <value name="Item" alias="Item"></value>
+        <value name="Fixed" alias="Fixed"></value>
+      </parameter>
+    </parameters>
+    <file>
+      <server>https://msazure.visualstudio.com</server>
+      <bugpath>
+        <![CDATA[https://msazure.visualstudio.com/One/_workitems/edit/{0}/]]>
+      </bugpath>
+      <project>One</project>
+      <fields>
+        <field name="Title">Azure: {8}</field>
+        <field name="Priority" type="int" alias="Priority">{13}</field>
+        <field name="Area" alias="Area">One</field>
+        <field name="issuetype" alias="Issue Type">Localization</field>
+        <field name="repro" alias="Repro Steps">
+          <![CDATA[
+Steps to reproduce:
+1. Browse to {9}
 
+Current Behavior:
+{8}
+{5}
+Look screen shot attached
+
+Expected Behavior:
+{6} 
+
+Affected Product 
+{2}
+
+Language: 
+{3}
+]]>
+        </field>
+      </fields>
+    </file>
+  </issue>
+  <issue>
+    <type>Azure devops template</type>
+    <alias>Azure devops template</alias>
+    <description>
+      Azure devops template
+    </description>
+    <parameters>
+      <parameter name="istransrel" alias="Is this feedback related to Translation?" type="combo" num="7">
+        <value name="Yes" alias="Yes"></value>
+        <value name="No" alias="No"></value>
+      </parameter>
+      <parameter name="language" alias="Language for which the issue is found" type="combo" num="3"  old_field="Language">
+        <value name="English" alias="English"></value>
+        <value name="Russian" alias="Russian"></value>
+        <value name="All" alias="All"></value>
+      </parameter>
+      <parameter name="location" alias="Page URL for which you are providing the feedback" type="text" num="9"></parameter>
+      <parameter name="shortDescription" alias="Brief Description of the issue" type="text" num="8"></parameter>
+      <parameter name="currentTranslation" alias="Current Translation" type="mtext" num="5"  old_field="Wrong"></parameter>
+      <parameter name="suggestedTranslation" alias="Expected Translation" type="mtext" num="6" ></parameter>
+      <parameter namee="explanation" alias="Explanation" type="text" num="11"></parameter>
+      <parameter name="productName" alias="Office Product&#10;App/Service Name" type="text" num="2"></parameter>
+      <parameter name="way" alias="Translation way" type="combo" num="16">
+        <value name="human" alias="Human"></value>
+        <value name="machine" alias="Machine"></value>
+        <value name="semi" alias="Semi"></value>
+      </parameter>
+      <parameter name="severity" alias="Severity" type="text" num="13"  old_field="Severity"></parameter>
+      <parameter name="bugPath" alias="Bug Path" type="text" num="15"></parameter>
+      <parameter name="status" alias="Status" type="combo" num="14" default="Active">
+        <value name="Active" alias="Active"></value>
+        <value name="Won't fix" alias="Won't fix"></value>
+        <value name="Reported" alias="Reported"></value>
+        <value name="Item" alias="Item"></value>
+        <value name="Fixed" alias="Fixed"></value>
+      </parameter>
+      <parameter name="isMvp" alias="Are you MVP?" type="combo" num="17">
+        <value name="No" alias="No"></value>
+        <value name="Yes" alias="Yes"></value>
+      </parameter>
+    </parameters>
+    <file>
+      <server>https://ceapex.visualstudio.com</server>
+      <bugpath>
+        <![CDATA[
+      https://ceapex.visualstudio.com/CEINTL/_workitems/edit/{0}]]></bugpath>
+      <project>CEINTL</project>
+      <item_type>Feedback</item_type>
+      <fields>
+        <field name="title">Azure: {3}: {8}</field>
+        <field name="Assigned To">Evgeny Vitenberg</field>
+        <field name="Project Type">Software</field>
+        <field name="Priority" type="int" alias="Priority">{13}</field>
+        <field name="Area" alias="Area">CEINTL</field>
+        <field name="issuetype" alias="Issue Type">Localization</field>
+        <field name="Description">
+          <![CDATA[
+Steps to reproduce:
+1. Browse to {9}
+
+Current Behavior:
+{8}
+{5}
+Look screen shot attached
+
+Expected Behavior:
+{6} 
+
+Affected Product 
+{2}
+
+Language: 
+{3}
+]]>
+        </field>
+      </fields>
+    </file>
+  </issue>
   <issue>
     <type>Msft docs template</type>
     <alias>Msft docs template</alias>
