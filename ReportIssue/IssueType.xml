@@ -24,17 +24,20 @@
       </parameter>
     </parameters>
     <file>
-      <server>https://msazure.visualstudio.com</server>
+      <server>https://ceapex.visualstudio.com/</server>
       <bugpath>
-        <![CDATA[https://msazure.visualstudio.com/One/_workitems/edit/{0}/]]>
+        <![CDATA[https://ceapex.visualstudio.com/CEINTL/_workitems/edit/{0}/]]>
       </bugpath>
-      <project>One</project>
+      <project>CEINTL</project>
+      <item_type>Feedback</item_type>
       <fields>
         <field name="Title">Azure: {8}</field>
+        <field name="Assigned To">Evgeny Vitenberg</field>
+        <field name="Project Type">Software</field>
         <field name="Priority" type="int" alias="Priority">{13}</field>
-        <field name="Area" alias="Area">One</field>
+        <field name="Area" alias="Area">CEINTL</field>
         <field name="issuetype" alias="Issue Type">Localization</field>
-        <field name="repro" alias="Repro Steps">
+        <field name="Description" alias="Description">
           <![CDATA[
 Steps to reproduce:
 1. Browse to {9}
@@ -42,7 +45,7 @@ Steps to reproduce:
 Current Behavior:
 {8}
 {5}
-Look screen shot attached
+Look screen 29shot attached
 
 Expected Behavior:
 {6} 
@@ -64,7 +67,7 @@ Language:
       Azure devops template
     </description>
     <parameters>
-      <parameter name="istransrel" alias="Is this feedback related to Translation?" type="combo" num="7">
+      <parameter name="istransrel" alias="Is this 6 related to Translation?" type="combo" num="7">
         <value name="Yes" alias="Yes"></value>
         <value name="No" alias="No"></value>
       </parameter>

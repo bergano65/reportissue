@@ -175,12 +175,20 @@ namespace ReportIssueUtilities
     string projectName,
     int workItemId)
         {
-            collection.EnsureAuthenticated();
+            try
+            {
+                collection.EnsureAuthenticated();
 
-            WorkItemStore workitemstore = collection.GetService<WorkItemStore>();
-            WorkItem item = workitemstore.GetWorkItem(workItemId);
+                WorkItemStore workitemstore = collection.GetService<WorkItemStore>();
+                WorkItem item = workitemstore.GetWorkItem(workItemId);
 
-            return item;
+                return item;
+            }
+            catch(Exception)
+            {
+                // usually item deleted already   
+                return null;
+            }
         }
 
         
