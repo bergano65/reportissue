@@ -269,20 +269,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AutomationDlg.xaml.cs">
+      <DependentUpon>AutomationDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChooseMailDlg.xaml.cs">
       <DependentUpon>ChooseMailDlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="EditIssueDlg.xaml.cs">
       <DependentUpon>EditIssueDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditIssueDlg3.xaml.cs">
-      <DependentUpon>EditIssueDlg3.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditIssueDlg2.xaml.cs">
-      <DependentUpon>EditIssueDlg2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditIssueDlg4.xaml.cs">
-      <DependentUpon>EditIssueDlg4.xaml</DependentUpon>
     </Compile>
     <Compile Include="ErrorCollection.cs">
       <DependentUpon>RIDataAccess.tt</DependentUpon>
@@ -296,6 +290,9 @@
     <Compile Include="FilterExt.cs" />
     <Compile Include="Issue.cs">
       <DependentUpon>RIDataAccess.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutomationPropertiesList.xaml.cs">
+      <DependentUpon>AutomationPropertiesList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Marker.cs">
       <DependentUpon>RIDataAccess.tt</DependentUpon>
@@ -330,6 +327,10 @@
       <DependentUpon>ShotPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="StringToIntConverter.cs" />
+    <Page Include="AutomationDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ChooseMailDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -338,21 +339,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditIssueDlg3.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="EditIssueDlg2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditIssueDlg4.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="FilterDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AutomationPropertiesList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="IssuePropertiesList.xaml">
       <SubType>Designer</SubType>

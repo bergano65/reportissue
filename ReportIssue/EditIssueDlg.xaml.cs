@@ -22,6 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 using ReportIssueUtilities;
+using System.Xml;
 
 namespace ReportIssue
 {
@@ -543,6 +544,19 @@ namespace ReportIssue
         private void _cancelBtn_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void _getValueBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // get currently selected property  configuration node if not null get it running script
+            XmlNode cfgNode = _issuePropsTabControl.GetCurrentPropertyConfigurationNode();
+
+
+            AutomationDlg automationDlg = new AutomationDlg();
+            if (automationDlg.ShowDialog() == true)
+            {
+
+            }
         }
 
         private void _pictureList_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <issues>
   <issue>
     <type>Azure one template</type>
@@ -9,9 +9,11 @@
      <parameters>
        <parameter name="bugTitle" alias="Bug title" type="text" num="8"></parameter>
        <parameter name="location" alias="Page URL for which you are providing the feedback" type="text" num="9"></parameter>
+       <parameter name="English" alias="English" type="text" num="12"></parameter>
+       <parameter name="resource_ID" alias="Resource ID" type="text" num="7"></parameter>
       <parameter name="current" alias="Current" type="mtext" num="5"  old_field="Wrong"></parameter>
       <parameter name="suggested" alias="Expected" type="mtext" num="6" ></parameter>
-      <parameter namee="explanation" alias="Explanation" type="text" num="11"></parameter>
+      <parameter namee="explanation" alias="Explanation" type="mtext" num="11"></parameter>
       <parameter name="productName" alias="Office Product&#10;App/Service Name" type="text" num="2"/>
       <parameter name="severity" alias="Severity" type="text" num="13"  old_field="Severity"></parameter>
       <parameter name="bugPath" alias="Bug Path" type="text" num="15"></parameter>
@@ -23,6 +25,14 @@
         <value name="Fixed" alias="Fixed"></value>
       </parameter>
     </parameters>
+    <automation>
+      <script src="scripts/getres_id.ps1">
+        <parameters>
+         <parameter name="subscription_id" alias="Subscription ID" type="text" />
+        <parameter name="resource_group" alias="Resource Group" type="text" />
+          </parameters>
+      </script>
+    </automation>
     <file>
       <server>https://ceapex.visualstudio.com/</server>
       <bugpath>
@@ -38,23 +48,20 @@
         <field name="Area" alias="Area">CEINTL</field>
         <field name="issuetype" alias="Issue Type">Localization</field>
         <field name="Description" alias="Description">
-          <![CDATA[
-Steps to reproduce:
-1. Browse to {9}
+                    <![CDATA[
+<table>
+<tr><td>Repo URL where the string lives</td><td>{9}</td></tr>
+<tr><td>File Name</td><td>{8}</td></tr>
+<tr><td>Resource IDs</td><td>{7}</td></tr>
+<tr><td>English String</td><td>{12}</td></tr>
+<tr><td>Current Translation</td><td>{5}</td></tr>
+<tr><td>Suggested Translation</td><td>{6}</td></tr>
+<tr><td>Urgency</td><td>{13}</td></tr>
+<tr><td>WhyFix is neede<td>{11}</td></tr>
+<tr><td>Language<td>-</td>{13}</tr>
+<tr><td>Affected Product<td>{2}</td></tr>
+</table>
 
-Current Behavior:
-{8}
-{5}
-Look screen 29shot attached
-
-Expected Behavior:
-{6} 
-
-Affected Product 
-{2}
-
-Language: 
-{3}
 ]]>
         </field>
       </fields>
@@ -64,7 +71,7 @@ Language:
     <type>Azure devops template</type>
     <alias>Azure devops template</alias>
     <description>
-      Azure devops template
+      Azure devops template+
     </description>
     <parameters>
       <parameter name="istransrel" alias="Is this 6 related to Translation?" type="combo" num="7">

@@ -91,5 +91,11 @@ namespace ReportIssue
                 }
             }
         }
+
+        public XmlNode GetCurrentPropertyConfigurationNode()
+        {
+            //            return _p
+            return null;
+        }
     }
 }
