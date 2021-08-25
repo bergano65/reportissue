@@ -5,11 +5,17 @@
 // Assembly location: C:\Users\Admin\Downloads\Dropbox\ri\Release\Release\ReportIssueUtilities.dll
 
 using Microsoft.TeamFoundation.Client;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using AuthenticationResult = Microsoft.Identity.Client.AuthenticationResult;
+
+using static Microsoft.VisualStudio.Services.Graph.GraphResourceIds;
+using System.Threading.Tasks;
 
 namespace ReportIssueUtilities
 {
@@ -18,14 +24,14 @@ namespace ReportIssueUtilities
         public static bool GetField(string from, ref string field, ref int ind)
         {
             ind = from.IndexOf("[[field]]", ind);
-                
+
             if (ind == -1)
             {
                 return false;
             }
-            
+
             int indEnd = from.IndexOf("[[field_end]]", ind);
-            
+
             if (indEnd == -1)
             {
                 return false;
@@ -37,7 +43,8 @@ namespace ReportIssueUtilities
             return true;
         }
 
-        public static bool GetError(string from, ref string err, ref int ind)
+
+            public static bool GetError(string from, ref string err, ref int ind)
         {
             ind = from.IndexOf("[[error]]", ind);
                 

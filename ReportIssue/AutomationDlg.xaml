@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ReportIssue"
-        Title="-" Height="400" Width="300">
+        Title="Scriptidg" Height="400" Width="700">
     <Grid>
         <FrameworkElement.Resources>
             <Style TargetType="{x:Type TextBlock}">
@@ -19,10 +19,10 @@
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Right"
+        <local:AutomationPropertiesList Margin="15,15,15,15" x:Name="_PropertiesList" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"
                 Margin="0, 0, 0, 0">
             <Button Click="_okBtn_Click" Name="_okBtn" IsDefault="true" Margin="5, 5, 5, 5" Height="20" Width="45">Ok</Button>
             <Button Click="_cancelBtn_Click" Name="_cancelBtn" IsCancel="true" Margin="5, 5, 5, 5" Height="20"

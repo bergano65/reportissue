@@ -551,8 +551,27 @@ namespace ReportIssue
             // get currently selected property  configuration node if not null get it running script
             XmlNode cfgNode = _issuePropsTabControl.GetCurrentPropertyConfigurationNode();
 
+            if (cfgNode == null)
+            {
+                return;
+            }
 
-            AutomationDlg automationDlg = new AutomationDlg();
+            XmlAttribute getAttribute = cfgNode.Attributes["get"];
+            if (getAttribute == null)
+            {
+                return;
+            }
+
+            string getScript = getAttribute.Value;
+            XmlNode templateNode = cfgNode.ParentNode.ParentNode;
+            XmlNode scriptNode = templateNode.SelectSingleNode(string.Format("automation/script['{0}']", getScript));
+
+            if (scriptNode == null)
+            {
+                return;
+            }
+
+            AutomationDlg automationDlg = new AutomationDlg(scriptNode);
             if (automationDlg.ShowDialog() == true)
             {
 

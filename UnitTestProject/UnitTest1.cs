@@ -1,17 +1,55 @@
-﻿ using System;
+﻿
+using System;
+using System.Management.Automation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ReportIssue;
 using ReportIssueUtilities;
 using System.Data.Entity.Validation;
-using System.IO;
+using System.Collections.ObjectModel;
 using System.Reflection;
+using System.IO;
+using System.Management.Automation.Runspaces;
 
-namespace UnitTests
-{  
+namespace UnitTestsProject
+{
     [TestClass]
-    public class UnitTest
+    public class UnitTest1
     {
+        [TestMethod]
+        public void TestRunScript()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string loc = assembly.Location;
+            string directory = Path.GetDirectoryName(loc);
+            string script = Path.Combine(directory, "scripts\\getresource_id.ps1");
+            string cmd = File.ReadAllText(script);
+
+
+            Runspace runspace = RunspaceFactory.CreateRunspace();
+            runspace.Open();
+            
+
+            PowerShell powerShell = PowerShell.Create();
+            powerShell.Runspace = runspace;
+            //                powerShell.AddScript(script);
+
+ powerShell.AddScript(cmd);
+ /*
+  * powerShell.AddParameter("subscription", "bcbd775a-813c-46e8-afe5-1a66912e0f03");
+            powerShell.AddParameter("group", "evitenres");
+            powerShell.AddParameter("name", "alert-tst");
+*/
+
+            var output = powerShell.Invoke<PSObject>();
+
+
+        }
+
+        [TestMethod]
+        public void TestGetWorkItem()
+        {
+        }
 
         [TestMethod]
         public void TestEncodeError()
@@ -36,7 +74,7 @@ namespace UnitTests
             collection.Add(e1);
             collection.Add(e2);
 
-            string errors = ReportIssueUtilities.EncodeErrors(errors);
+//            string errors = ReportIssueUtilities.EncodeErrors(errors);
         }
 
 
@@ -114,4 +152,3 @@ namespace UnitTests
     }
 }
 
- 

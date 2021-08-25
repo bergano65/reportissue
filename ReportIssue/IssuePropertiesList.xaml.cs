@@ -96,6 +96,11 @@ namespace ReportIssue
             }
         }
 
+        public XmlNode GetCurrentPropertyConfigurationNode()
+        {
+            return  _propertyList.SelectedItem as XmlNode;
+        }
+
         public bool CheckIssueProperties()
         {
             int count = this._propertyList.Items.Count;

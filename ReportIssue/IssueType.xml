@@ -10,7 +10,7 @@
        <parameter name="bugTitle" alias="Bug title" type="text" num="8"></parameter>
        <parameter name="location" alias="Page URL for which you are providing the feedback" type="text" num="9"></parameter>
        <parameter name="English" alias="English" type="text" num="12"></parameter>
-       <parameter name="resource_ID" alias="Resource ID" type="text" num="7"></parameter>
+       <parameter name="resource_ID" alias="Resource ID" type="text" get="get_resourceid" num="7"></parameter>
       <parameter name="current" alias="Current" type="mtext" num="5"  old_field="Wrong"></parameter>
       <parameter name="suggested" alias="Expected" type="mtext" num="6" ></parameter>
       <parameter namee="explanation" alias="Explanation" type="mtext" num="11"></parameter>
@@ -26,7 +26,7 @@
       </parameter>
     </parameters>
     <automation>
-      <script src="scripts/getres_id.ps1">
+      <script name="get_resourceid" src="scripts\getresource_id.ps1">
         <parameters>
          <parameter name="subscription_id" alias="Subscription ID" type="text" />
         <parameter name="resource_group" alias="Resource Group" type="text" />

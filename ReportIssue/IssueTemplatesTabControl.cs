@@ -25,7 +25,7 @@ namespace ReportIssue
             selectedContent.PutIssueProperties(ref issue);
         }
 
-        public void GetIssueProperties(Issue issue)
+    public void GetIssueProperties(Issue issue)
         {
             bool flag = false;
             if (issue.Template == "")
@@ -94,8 +94,13 @@ namespace ReportIssue
 
         public XmlNode GetCurrentPropertyConfigurationNode()
         {
-            //            return _p
-            return null;
+            IssuePropertiesList selectedContent = this.SelectedContent as IssuePropertiesList;
+            if (selectedContent == null)
+            {
+                return null;
+            }
+
+            return selectedContent.GetCurrentPropertyConfigurationNode();
         }
     }
 }
