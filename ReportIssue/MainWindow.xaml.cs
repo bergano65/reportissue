@@ -55,6 +55,9 @@ namespace ReportIssue
         private XmlDocument _cfgDoc;
         private bool _isIssueEdited;
 
+        private int _canvasWidth = 805;
+        private int _canvasHeight = 750;
+
         private Issue _currentIssue { get; set; }
 
         private int _issueNum { get; set; }
@@ -65,7 +68,7 @@ namespace ReportIssue
         public static extern bool DeleteObject(IntPtr hObject);
 
         public MainWindow()
-        {        
+        {
             this._tc = new TelemetryClient();
             this._tc.Context.User.AuthenticatedUserId = "eviten@microsoft.com";
             this._tc.Context.Session.Id = Guid.NewGuid().ToString();
@@ -92,7 +95,7 @@ namespace ReportIssue
 
             if (this._data.Filters.Count<Filter>() > 0)
             {
-               this._filter = this._data.Filters.First<Filter>();
+                this._filter = this._data.Filters.First<Filter>();
             }
             else
             {
@@ -211,7 +214,7 @@ namespace ReportIssue
             {
                 this._isIssueEdited = false;
             }
-        } 
+        }
 
         private void RedrawList()
         {
@@ -242,7 +245,7 @@ namespace ReportIssue
                 this._deleteIssueBtn.IsEnabled = false;
             }
         }
-         
+
         private string GetReportMail(IEnumerable<Issue> issues, ref int pictureCount)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -351,14 +354,14 @@ namespace ReportIssue
             }
 
             XmlNode issueTypeNode = xmlNode1.SelectSingleNode("item_type");
-           
+
             string innerText1 = xmlNode2.InnerText;
             string innerText2 = xmlNode3.InnerText;
             TfsTeamProjectCollection projectCollection = ReportIssueUtilities.ReportIssueUtilities.GetTfsTeamProjectCollection(innerText1);
             string title = issue.Parameter4;
 
             string projectName = xmlNode3.InnerText;
-           
+
             string issueType = issueTypeNode != null ? issueTypeNode.InnerText : "Bug";
 
             string description = "";
@@ -403,7 +406,7 @@ namespace ReportIssue
                         if (type == "int")
                         {
                             parameters[index] = (Int32.Parse(fieldValue));
-                        }                    
+                        }
                     }
                 }
                 catch (System.Exception ex)
@@ -413,23 +416,23 @@ namespace ReportIssue
             try
             {
                 // check item already exist
-                WorkItem tfsWorkItem = null; 
+                WorkItem tfsWorkItem = null;
                 int id = 0;
 
                 if (Int32.TryParse(issue.Parameter15, out id))
                 {
                     tfsWorkItem = ReportIssueUtilities.ReportIssueUtilities.GetTfsWorkItem(projectCollection, projectName, id);
                 }
-    
-   /*         
-              foreach (Field f in tfsWorkItem.Fields)
-                {
-                    if (f.Value != null && f.Value.ToString().Contains("rows"))
-                    {
 
-                    }
-                }
-*/
+                /*         
+                           foreach (Field f in tfsWorkItem.Fields)
+                             {
+                                 if (f.Value != null && f.Value.ToString().Contains("rows"))
+                                 {
+
+                                 }
+                             }
+             */
 
                 MessageBoxResult result = MessageBoxResult.No;
                 if (tfsWorkItem != null)
@@ -459,7 +462,7 @@ namespace ReportIssue
                     return (WorkItem)null;
                 }
 
-                List<string> pictures = this.GetPictures((IEnumerable<Issue>)new List<Issue>()
+                List<string> pictures = this.GetPictures2((IEnumerable<Issue>)new List<Issue>()
                 {
                   issue
                 });
@@ -472,7 +475,7 @@ namespace ReportIssue
 
                 tfsWorkItem.AreaPath = area;
                 tfsWorkItem.Save();
-//                issue.BugPath = string.Format(xmlNode4.InnerText, (object)tfsWorkItem.Id);
+                //                issue.BugPath = string.Format(xmlNode4.InnerText, (object)tfsWorkItem.Id);
                 issue.BugPath = issue.Parameter15 = tfsWorkItem.Id.ToString();
                 this.DeletePictures(pictures);
                 return tfsWorkItem;
@@ -494,7 +497,7 @@ namespace ReportIssue
                 this._tc.TrackEvent("No issues collected for bug reporting", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 int num = (int)MessageBox.Show("No issues collected for bug reporting", "Issue report");
                 this._tc.StopOperation<RequestTelemetry>(operation);
-            } 
+            }
             else
             {
                 this._tc.TrackEvent("Create Issue Bug", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
@@ -507,7 +510,7 @@ namespace ReportIssue
                     this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0}", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                 }
                 else
-                { 
+                {
                     this._tc.TrackEvent(string.Format("Create Issue Bug for issue {0} failed", (object)issue.ID), (IDictionary<string, string>)null, (IDictionary<string, double>)null);
                     flag = false;
                 }
@@ -524,7 +527,7 @@ namespace ReportIssue
                 }
                 finally
                 {
-                  this._tc.StopOperation<RequestTelemetry>(operation);
+                    this._tc.StopOperation<RequestTelemetry>(operation);
                 }
 
                 if (flag)
@@ -571,7 +574,7 @@ namespace ReportIssue
                         int pictureCount = 1;
                         mailItem.HTMLBody = this.GetReportMail(issues, ref pictureCount);
 
-                        List<string> pictures = this.GetPictures(issues);
+                        List<string> pictures = this.GetPictures2(issues);
                         for (int index = 0; index < pictures.Count; ++index)
                         {
                             // ISSUE: reference to a compiler-generated method
@@ -581,7 +584,7 @@ namespace ReportIssue
                         // ISSUE: reference to a compiler-generated method
                         mailItem.Display((object)false);
                         // ISSUE: reference to a compiler-generated method
-//                        mailItem.Send();
+                        //                        mailItem.Send();
                         this.DeletePictures(pictures);
                         int num = (int)MessageBox.Show("Report sent successfully");
                     }
@@ -615,7 +618,7 @@ namespace ReportIssue
             List<string> stringList = new List<string>();
 
             for (int index = 0; index < issues.ToList<Issue>().Count; ++index)
-           {
+            {
                 Issue issue = issues.ToList<Issue>()[index];
                 issue.Open();
 
@@ -624,8 +627,8 @@ namespace ReportIssue
 
                     DrawingVisual drawingVisual = new DrawingVisual();
                     DrawingContext drawingContext = drawingVisual.RenderOpen();
-                    BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(p.Bitmap.GetHbitmap(), (IntPtr)0, new Int32Rect(0, 0, p.Bitmap.Width, p.Bitmap.Height), BitmapSizeOptions.FromWidthAndHeight(805, 750));
-                    drawingContext.DrawImage((ImageSource)sourceFromHbitmap, new Rect(0.0, 0.0, (double)805, (double)750));
+                    BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(p.Bitmap.GetHbitmap(), (IntPtr)0, new Int32Rect(0, 0, p.Bitmap.Width, p.Bitmap.Height), BitmapSizeOptions.FromWidthAndHeight(_canvasWidth, _canvasHeight));
+                    drawingContext.DrawImage((ImageSource)sourceFromHbitmap, new Rect(0.0, 0.0, (double)sourceFromHbitmap.Width, (double)sourceFromHbitmap.Height));
 
                     foreach (Marker marker in p.Markers)
                     {
@@ -633,7 +636,7 @@ namespace ReportIssue
                     }
 
                     drawingContext.Close();
-                    RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(805, 750, 96.0, 96.0, PixelFormats.Pbgra32);
+                    RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)sourceFromHbitmap.Width, (int)sourceFromHbitmap.Height, 96.0, 96.0, PixelFormats.Pbgra32);
                     renderTargetBitmap.Render((Visual)drawingVisual);
                     this._tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                     Directory.CreateDirectory(this._tempFolder);
@@ -646,6 +649,54 @@ namespace ReportIssue
                 }
             }
 
+            return stringList;
+        }
+
+        private List<string> GetPictures2(IEnumerable<Issue> issues)
+        {
+            this._tc.TrackEvent("Get pictures", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
+            int pictureNum = 1;
+            List<string> stringList = new List<string>();
+
+          
+            for (int index = 0; index < issues.ToList<Issue>().Count; ++index)
+           {
+                Issue issue = issues.ToList<Issue>()[index];
+                issue.Open();
+                foreach (Picture p in issue.Pictures)
+                {
+                    int w = p.Bitmap.Width;
+                    int h = p.Bitmap.Height;
+                    double xScale = ((double)w) / ((double)_canvasWidth);
+                    double yScale = ((double)h) / ((double)_canvasHeight);
+
+                    DrawingVisual drawingVisual = new DrawingVisual();
+                    DrawingContext drawingContext = drawingVisual.RenderOpen();
+                    BitmapSource sourceFromHbitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(p.Bitmap.GetHbitmap(), (IntPtr)0, new Int32Rect(0, 0, w, h), BitmapSizeOptions.FromWidthAndHeight(w, h));
+                    
+                    drawingContext.DrawImage((ImageSource)sourceFromHbitmap, new Rect(0.0, 0.0, w, h));
+
+                    foreach (Marker marker in p.Markers)
+                    {
+                            Rect  rFrom  = new Rect((double)marker.Left, (double)marker.Top, (double)marker.Width, (double)marker.Height);
+                            Rect rTo = ScaleRect(rFrom, xScale, yScale);
+    
+                            drawingContext.DrawRectangle((System.Windows.Media.Brush)null, new System.Windows.Media.Pen((System.Windows.Media.Brush)System.Windows.Media.Brushes.Red, 2.0), rTo);
+                    }
+
+                    drawingContext.Close();
+                    RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap((int)sourceFromHbitmap.Width, (int)sourceFromHbitmap.Height, 96.0, 96.0, PixelFormats.Pbgra32);
+                    renderTargetBitmap.Render((Visual)drawingVisual);
+                    this._tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                    Directory.CreateDirectory(this._tempFolder);
+                    string path = Path.Combine(this._tempFolder, string.Format("Picture-{0}.png", pictureNum++));
+                    stringList.Add(path);
+                    PngBitmapEncoder pngBitmapEncoder = new PngBitmapEncoder();
+                    pngBitmapEncoder.Frames.Add(BitmapFrame.Create((BitmapSource)renderTargetBitmap));
+                    using (Stream stream = (Stream)File.Create(path))
+                        pngBitmapEncoder.Save(stream);
+                }
+            }
             return stringList;
         }
 
@@ -685,7 +736,7 @@ namespace ReportIssue
                                         }
                                         else
                                             this._tc.TrackEvent("Issue edit canceled", (IDictionary<string, string>)null, (IDictionary<string, double>)null);
-                                        this.RedrawList();
+                                         this.RedrawList();
                                         this._tc.StopOperation<RequestTelemetry>(operation);
                                     }
                     */
@@ -879,7 +930,7 @@ namespace ReportIssue
             {
                 issue.Selected = !issue.Selected;
             }
-    
+
             CollectionViewSource.GetDefaultView((object)this._issueList.ItemsSource).Refresh();
         }
 
@@ -984,7 +1035,7 @@ namespace ReportIssue
         private void bugPathHyperlink_Click(object sender, RoutedEventArgs e)
         {
             Issue issue = (e.Source as System.Windows.Documents.Hyperlink).DataContext as Issue;
-            
+
             // find bug location
             XmlNode issueTemplate = this.GetIssueTemplate(issue.Template);
             if (issueTemplate == null)
@@ -1040,6 +1091,13 @@ namespace ReportIssue
             Issue dataContext = (e.Source as System.Windows.Documents.Hyperlink).DataContext as Issue;
             Process.Start(dataContext.Parameter9);
         }
+
+
+        private Rect ScaleRect(Rect rFrom, double xScale, double yScale)
+        {
+            Rect r = new Rect(rFrom.X * xScale, rFrom.Y * yScale, rFrom.Width * xScale, rFrom.Height * yScale);
+            return r;
+        }
+
     }
 }
-

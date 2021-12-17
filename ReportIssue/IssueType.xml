@@ -15,7 +15,8 @@
       <parameter name="suggested" alias="Expected" type="mtext" num="6" ></parameter>
       <parameter namee="explanation" alias="Explanation" type="mtext" num="11"></parameter>
       <parameter name="productName" alias="Office Product&#10;App/Service Name" type="text" num="2"/>
-      <parameter name="severity" alias="Severity" type="text" num="13"  old_field="Severity"></parameter>
+		 <parameter name="severity" alias="Severity" type="text" num="13"  old_field="Severity"></parameter>
+		 <parameter name="language" alias="Language" type="text" num="16"></parameter>
       <parameter name="bugPath" alias="Bug Path" type="text" num="15"></parameter>
       <parameter name="status" alias="Status" type="combo" num="14" default="Active">
         <value name="Active" alias="Active"></value>
@@ -49,7 +50,7 @@
         <field name="issuetype" alias="Issue Type">Localization</field>
         <field name="Description" alias="Description">
                     <![CDATA[
-<table>
+<table boraer="1">
 <tr><td>Repo URL where the string lives</td><td>{9}</td></tr>
 <tr><td>File Name</td><td>{8}</td></tr>
 <tr><td>Resource IDs</td><td>{7}</td></tr>
@@ -58,7 +59,7 @@
 <tr><td>Suggested Translation</td><td>{6}</td></tr>
 <tr><td>Urgency</td><td>{13}</td></tr>
 <tr><td>WhyFix is neede<td>{11}</td></tr>
-<tr><td>Language<td>-</td>{13}</tr>
+<tr><td>Language<td>-</td>{16}</tr>
 <tr><td>Affected Product<td>{2}</td></tr>
 </table>
 

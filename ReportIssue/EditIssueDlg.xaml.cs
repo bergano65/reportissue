@@ -49,6 +49,10 @@ namespace ReportIssue
         private Picture _currentPicture;
         private TextBlock _markerTxtBlock;
 
+        private int _screenWidth = -1;
+        private int _screenHeight = -1;
+
+
         public bool Saved { get; set; }
         
         [DllImport("gdi32.dll")]
@@ -290,7 +294,11 @@ namespace ReportIssue
             int y = bounds.Y;
             System.Drawing.Size size = bounds.Size;
 
-            this._currentPicture.Bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            _screenWidth = bounds.Width;
+            _screenHeight = bounds.Height;
+
+
+            this._currentPicture.Bitmap = new Bitmap(_screenWidth, _screenHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             Graphics graphics = Graphics.FromImage((System.Drawing.Image)this._currentPicture.Bitmap);
             graphics.CopyFromScreen(x, y, 0, 0, size, CopyPixelOperation.SourceCopy);
 

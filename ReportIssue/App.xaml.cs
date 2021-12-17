@@ -31,7 +31,7 @@ namespace ReportIssue
         private static string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
 
         //Set the scope for API call to user.read
-        private static string[] scopes = new string[] { "user.read", "https://graph.microsoft.com/PrivilegedAccess.ReadWrite.AzureResources" };
+        private static string[] scopes = new string[] { "user.read"};
 
         public static IPublicClientApplication PublicClientApp
         {
